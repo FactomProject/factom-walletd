@@ -21,9 +21,7 @@ func main() {
 	flag.Parse()
 	port := *pflag
 	
-	defer wsapi.Start(fmt.Sprintf(":%d", port))
-	
-	// handle os signals and stop the server gracefully
+	// setup handling for os signals and stop the server gracefully
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
@@ -33,4 +31,7 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+	
+	// start the wsapi server
+	wsapi.Start(fmt.Sprintf(":%d", port))
 }
