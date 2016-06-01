@@ -17,16 +17,16 @@ import (
 	"github.com/FactomProject/factom/wallet/wsapi"
 )
 
+var homedir = func() string {
+	usr, err := user.Current()
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+	return usr.HomeDir
+}()
+
 func main() {
-	homedir := func() string {
-		usr, err := user.Current()
-		if err != nil {
-			log.Println(err)
-			os.Exit(1)
-		}
-		return usr.HomeDir
-	}()
-	
 	// configure the server
 	var (
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
@@ -37,22 +37,22 @@ func main() {
 
 	port := *pflag
 
+	// open or create a new wallet file
 	fctWallet, err := openOrCreateWallet(*wflag)
 	if err != nil {
-		log.Print(*wflag)
 		log.Fatal(err)
 	}
-	
+
 	// setup handling for os signals and stop the server gracefully
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		for sig := range c {
 			log.Printf("Captured %v, stopping web server and exiting", sig)
 			wsapi.Stop()
 		}
 	}()
-	
+
 	// start the wsapi server
 	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port))
 }
@@ -63,7 +63,9 @@ func openOrCreateWallet(path string) (*wallet.Wallet, error) {
 		if !os.IsNotExist(err) {
 			return nil, err
 		}
+		log.Println("Creating new wallet", path)
 		return wallet.NewWallet(path)
-	} 
+	}
+	log.Println("Opening wallet", path)
 	return wallet.OpenWallet(path)
 }
