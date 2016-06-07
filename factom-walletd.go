@@ -38,7 +38,7 @@ func main() {
 	port := *pflag
 
 	// open or create a new wallet file
-	fctWallet, err := openOrCreateWallet(*wflag)
+	fctWallet, err := wallet.NewOrOpenWallet(*wflag)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,17 +55,4 @@ func main() {
 
 	// start the wsapi server
 	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port))
-}
-
-func openOrCreateWallet(path string) (*wallet.Wallet, error) {
-	_, err := os.Stat(path)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return nil, err
-		}
-		log.Println("Creating new wallet", path)
-		return wallet.NewWallet(path)
-	}
-	log.Println("Opening wallet", path)
-	return wallet.OpenWallet(path)
 }
