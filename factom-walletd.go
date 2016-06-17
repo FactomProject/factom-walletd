@@ -31,8 +31,7 @@ func main() {
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
 		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet"),
 			"set the default wallet location")
-		iflag = flag.String("i", fmt.Sprint(homedir, ""),
-			"import a version 1 wallet")
+		iflag = flag.String("i", "", "import a version 1 wallet")
 	)
 	flag.Parse()
 
