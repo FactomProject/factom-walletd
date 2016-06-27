@@ -46,7 +46,7 @@ func main() {
 		w.Close()
 		os.Exit(0)
 	}
-	
+
 	// open or create a new wallet file
 	fctWallet, err := wallet.NewOrOpenWallet(*wflag)
 	if err != nil {
