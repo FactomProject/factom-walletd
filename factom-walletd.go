@@ -48,7 +48,7 @@ func main() {
 	}
 	
 	// open or create a new wallet file
-	fctWallet, err := wallet.NewOrOpenWallet(*wflag)
+	fctWallet, err := wallet.NewOrOpenLevelDBWallet(*wflag)
 	if err != nil {
 		log.Fatal(err)
 	}
