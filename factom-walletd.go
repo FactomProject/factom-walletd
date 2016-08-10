@@ -52,6 +52,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	// open and add a transaction database to the wallet object.
+	txdb, err := wallet.NewTXLevelDB(fmt.Sprint(homedir, "/.factom/txdb"))
+	if err != nil {
+		log.Println("Could not add transaction database to wallet:", err)
+	} else {
+		fctWallet.AddTXDB(txdb)
+	}
 
 	// setup handling for os signals and stop the server gracefully
 	go func() {
