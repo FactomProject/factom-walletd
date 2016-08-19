@@ -29,7 +29,7 @@ func main() {
 	// configure the server
 	var (
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
-		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet"),
+		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet.db"),
 			"set the default wallet location")
 		iflag = flag.String("i", "", "import a version 1 wallet")
 	)
@@ -48,13 +48,13 @@ func main() {
 	}
 	
 	// open or create a new wallet file
-	fctWallet, err := wallet.NewOrOpenLevelDBWallet(*wflag)
+	fctWallet, err := wallet.NewOrOpenBoltDBWallet(*wflag)
 	if err != nil {
 		log.Fatal(err)
 	}
 	
 	// open and add a transaction database to the wallet object.
-	txdb, err := wallet.NewTXLevelDB(fmt.Sprint(homedir, "/.factom/txdb"))
+	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(homedir, "/.factom/txdb.db"))
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
