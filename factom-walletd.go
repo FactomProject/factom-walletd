@@ -32,11 +32,21 @@ func main() {
 		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet.db"),
 			"set the default wallet location")
 		iflag = flag.String("i", "", "import a version 1 wallet")
+		TLSflag     = flag.Bool("tls", true, "enable tls")
+		TLSKeyflag  = flag.String("key", fmt.Sprint(homedir, "/.factom/tlspub.cert"),
+			"set the default tls key location")
+		TLSCertflag = flag.String("cert", fmt.Sprint(homedir, "/.factom/tlspriv.key"),
+			"set the default tls cert location")
 	)
 	flag.Parse()
 
 	port := *pflag
-
+	TLSConfig := wsapi.TLSConfig{
+		TLSEnable:   *TLSflag,
+		TLSKeyFile:  *TLSKeyflag,
+		TLSCertFile: *TLSCertflag,
+	}
+	
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
 		w, err := wallet.ImportV1Wallet(*iflag, *wflag)
@@ -72,5 +82,5 @@ func main() {
 	}()
 
 	// start the wsapi server
-	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port))
+	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), TLSConfig)
 }
