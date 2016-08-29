@@ -71,6 +71,9 @@ func main() {
 		}
 	}()
 
+	// start without tls for now
+	tconf := new(wsapi.TLSConfig)
+	
 	// start the wsapi server
-	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port))
+	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), tconf)
 }
