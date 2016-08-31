@@ -13,8 +13,10 @@ import (
 	"os/user"
 	"syscall"
 
+	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factom/wallet/wsapi"
+	"github.com/FactomProject/factomd/util"
 )
 
 var homedir = func() string {
@@ -37,14 +39,29 @@ func main() {
 			"set the default tls key location")
 		TLSCertflag = flag.String("cert", fmt.Sprint(homedir, "/.factom/tlspriv.key"),
 			"set the default tls cert location")
+		rpcUserflag     = flag.String("rpcuser", "", "Username for JSON-RPC connections")
+		rpcPasswordflag = flag.String("rpcpassword", "", "Password for JSON-RPC connections")
 	)
 	flag.Parse()
+	filename := util.ConfigFilename()
+	cfg := util.ReadConfig(filename).Rpc
+	if *rpcUserflag == "" {
+		*rpcUserflag = cfg.RpcUser
+	}
+	if *rpcPasswordflag == "" {
+		*rpcPasswordflag = cfg.RpcPass
+	}
+	if *rpcUserflag == "" || *rpcPasswordflag == "" {
+		log.Fatal("Rpc user and password did not set, using -rpcuser and -rpcpassword or config file")
+	}
 
 	port := *pflag
-	TLSConfig := wsapi.TLSConfig{
+	RPCConfig := factom.RPCConfig{
 		TLSEnable:   *TLSflag,
 		TLSKeyFile:  *TLSKeyflag,
 		TLSCertFile: *TLSCertflag,
+		RPCUser:     *rpcUserflag,
+		RPCPassword: *rpcPasswordflag,
 	}
 	
 	if *iflag != "" {
@@ -82,5 +99,5 @@ func main() {
 	}()
 
 	// start the wsapi server
-	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), TLSConfig)
+	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), RPCConfig)
 }
