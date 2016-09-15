@@ -58,10 +58,10 @@ func main() {
 	}
 
 	if *factomdRpcUser == "" {
-		if cfg.Rpc.FactomdRpcUser != "" {
+		if cfg.App.FactomdRpcUser != "" {
 			fmt.Printf("using factomd API user and password specified in \"%s\" at FactomdRpcUser & FactomdRpcPass\n", filename)
-			*factomdRpcUser = cfg.Rpc.FactomdRpcUser
-			*factomdRpcPassword = cfg.Rpc.FactomdRpcPass
+			*factomdRpcUser = cfg.App.FactomdRpcUser
+			*factomdRpcPassword = cfg.App.FactomdRpcPass
 		}
 	}
 
