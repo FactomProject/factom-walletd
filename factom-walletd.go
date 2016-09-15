@@ -37,8 +37,6 @@ func main() {
 		TLSflag     = flag.Bool("tls", false, "enable tls") //to get tls, run as "factom-walletd -tls=true"
 		TLSKeyflag  = flag.String("key", fmt.Sprint(homedir, "/.factom/tlspub.cert"), "set the default tls key location")
 		TLSCertflag = flag.String("cert", fmt.Sprint(homedir, "/.factom/tlspriv.key"), "set the default tls cert location")
-		//rpcUserflag     = flag.String("rpcuser", "", "Username for JSON-RPC connections")
-		//rpcPasswordflag = flag.String("rpcpassword", "", "Password for JSON-RPC connections")
 
 		walletRpcUser      = flag.String("walletuser", "", "Username to expect before allowing connections")
 		walletRpcPassword  = flag.String("walletpassword", "", "Password to expect before allowing connections")
@@ -46,36 +44,24 @@ func main() {
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
 	)
 	flag.Parse()
-	/*filename := util.ConfigFilename()
-	cfg := util.ReadConfig(filename)
-	if *rpcUserflag == "" {
-		*rpcUserflag = cfg.FactomdRPCPassword
-	}
-	if *rpcPasswordflag == "" {
-		*rpcPasswordflag = cfg.FactomdRPCPassword
-	}
-	if *rpcUserflag == "" || *rpcPasswordflag == "" {
-		log.Fatal("Rpc user and password did not set, using -rpcuser and -rpcpassword or config file")
-	}*/
 
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
-	cfg := util.ReadConfig(filename).Rpc
-	cfgw := util.ReadConfig(filename).Walletd
+	cfg := util.ReadConfig(filename)
 
 	if *walletRpcUser == "" {
-		if cfgw.WalletRpcUser != "" {
+		if cfg.Walletd.WalletRpcUser != "" {
 			fmt.Printf("using factom-walletd API user and password specified in \"%s\" at WalletRpcUser & WalletRpcPass\n", filename)
-			*walletRpcUser = cfgw.WalletRpcUser
-			*walletRpcPassword = cfgw.WalletRpcPass
+			*walletRpcUser = cfg.Walletd.WalletRpcUser
+			*walletRpcPassword = cfg.Walletd.WalletRpcPass
 		}
 	}
 
 	if *factomdRpcUser == "" {
-		if cfg.FactomdRpcUser != "" {
+		if cfg.Rpc.FactomdRpcUser != "" {
 			fmt.Printf("using factomd API user and password specified in \"%s\" at FactomdRpcUser & FactomdRpcPass\n", filename)
-			*factomdRpcUser = cfg.FactomdRpcUser
-			*factomdRpcPassword = cfg.FactomdRpcPass
+			*factomdRpcUser = cfg.Rpc.FactomdRpcUser
+			*factomdRpcPassword = cfg.Rpc.FactomdRpcPass
 		}
 	}
 
