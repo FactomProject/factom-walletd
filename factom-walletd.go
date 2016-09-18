@@ -42,6 +42,8 @@ func main() {
 		walletRpcPassword  = flag.String("walletpassword", "", "Password to expect before allowing connections")
 		factomdRpcUser     = flag.String("factomduser", "", "Username for API connections to factomd")
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
+
+		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
 	)
 	flag.Parse()
 
@@ -65,15 +67,25 @@ func main() {
 		}
 	}
 
+	if *factomdLocation == "" {
+		if cfg.Walletd.FactomdLocation != "localhost:8088" {
+			fmt.Printf("using factomd location specified in \"%s\" as FactomdLocation = \"%s\"\n", filename, cfg.Walletd.FactomdLocation)
+			*factomdLocation = cfg.Walletd.FactomdLocation
+		} else {
+			*factomdLocation = "localhost:8088"
+		}
+	}
+
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
-		TLSEnable:          *TLSflag,
-		TLSKeyFile:         *TLSKeyflag,
-		TLSCertFile:        *TLSCertflag,
-		WalletRPCUser:      *walletRpcUser,
-		WalletRPCPassword:  *walletRpcPassword,
+		TLSEnable:         *TLSflag,
+		TLSKeyFile:        *TLSKeyflag,
+		TLSCertFile:       *TLSCertflag,
+		WalletRPCUser:     *walletRpcUser,
+		WalletRPCPassword: *walletRpcPassword,
 	}
 	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
+	factom.SetFactomdServer(*factomdLocation)
 
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
