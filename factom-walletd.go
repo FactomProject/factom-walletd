@@ -72,9 +72,8 @@ func main() {
 		TLSCertFile:        *TLSCertflag,
 		WalletRPCUser:      *walletRpcUser,
 		WalletRPCPassword:  *walletRpcPassword,
-		FactomdRPCUser:     *factomdRpcUser,
-		FactomdRPCPassword: *factomdRpcPassword,
 	}
+	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
 
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
