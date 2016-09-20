@@ -33,10 +33,10 @@ func main() {
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
 		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet.db"),
 			"set the default wallet location")
-		iflag       = flag.String("i", "", "import a version 1 wallet")
-		TLSflag     = flag.Bool("tls", false, "enable tls") //to get tls, run as "factom-walletd -tls=true"
-		TLSKeyflag  = flag.String("key", fmt.Sprint(homedir, "/.factom/tlspub.cert"), "set the default tls key location")
-		TLSCertflag = flag.String("cert", fmt.Sprint(homedir, "/.factom/tlspriv.key"), "set the default tls cert location")
+		iflag         = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
+		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet") //to get tls, run as "factom-walletd -wallettls=true"
+		walletTLSKey  = flag.String("walletkey", "", "This file is the PRIVATE TLS key encrypting connections to the wallet. (default ~/.factom/walletAPIpriv.key)")
+		walletTLSCert = flag.String("walletcert", "", "This file is the PUBLIC TLS certificate wallet API users will need to connect. (default ~/.factom/walletAPIpub.cert)")
 
 		walletRpcUser      = flag.String("walletuser", "", "Username to expect before allowing connections")
 		walletRpcPassword  = flag.String("walletpassword", "", "Password to expect before allowing connections")
@@ -56,7 +56,11 @@ func main() {
 			fmt.Printf("using factom-walletd API user and password specified in \"%s\" at WalletRpcUser & WalletRpcPass\n", filename)
 			*walletRpcUser = cfg.Walletd.WalletRpcUser
 			*walletRpcPassword = cfg.Walletd.WalletRpcPass
+		} else {
+			fmt.Printf("Warning, factom-walletd API is not password protected. Factoids can be stolen remotely.\n")
 		}
+	} else {
+		fmt.Printf("wallet access protected by user/password specified on command line\n")
 	}
 
 	if *factomdRpcUser == "" {
@@ -69,18 +73,48 @@ func main() {
 
 	if *factomdLocation == "" {
 		if cfg.Walletd.FactomdLocation != "localhost:8088" {
-			fmt.Printf("using factomd location specified in \"%s\" as FactomdLocation = \"%s\"\n", filename, cfg.Walletd.FactomdLocation)
+			fmt.Printf("using factomd location specified in \"%s\" at FactomdLocation = \"%s\"\n", filename, cfg.Walletd.FactomdLocation)
 			*factomdLocation = cfg.Walletd.FactomdLocation
 		} else {
 			*factomdLocation = "localhost:8088"
 		}
 	}
 
+	if cfg.Walletd.WalletTlsEnabled == true {
+		*walletTLSflag = true
+	}
+	if *walletTLSflag == true {
+		if *walletTLSKey == "" { //if specified, instead use what was on the command line
+			if cfg.Walletd.WalletTlsPrivateKey != "/full/path/to/walletAPIpriv.key" { //otherwise check if the the config file has something new
+				fmt.Printf("using wallet TLS key file specified in \"%s\" at WalletTlsPrivateKey = \"%s\"\n", filename, cfg.Walletd.WalletTlsPrivateKey)
+				*walletTLSKey = cfg.Walletd.WalletTlsPrivateKey
+			} else { //if none were specified, use the default file
+				*walletTLSKey = fmt.Sprint(homedir, "/.factom/walletAPIpriv.key")
+				fmt.Printf("using default wallet TLS key file \"%s\"\n", *walletTLSKey)
+			}
+		} else {
+			fmt.Printf("using specified wallet TLS key file \"%s\"\n", *walletTLSKey)
+		}
+		if *walletTLSCert == "" { //if specified, instead use what was on the command line
+			if cfg.Walletd.WalletTlsPublicCert != "/full/path/to/walletAPIpub.cert" { //otherwise check if the the config file has something new
+				fmt.Printf("using wallet TLS certificate file specified in \"%s\" at WalletTlsPublicCert = \"%s\"\n", filename, cfg.Walletd.WalletTlsPublicCert)
+				*walletTLSCert = cfg.Walletd.WalletTlsPublicCert
+			} else { //if none were specified, use the default file
+				*walletTLSCert = fmt.Sprint(homedir, "/.factom/walletAPIpub.cert")
+				fmt.Printf("using default wallet TLS certificate file \"%s\"\n", *walletTLSCert)
+			}
+		} else {
+			fmt.Printf("using specified wallet TLS certificate file \"%s\"\n", *walletTLSCert)
+		}
+	} else {
+		fmt.Printf("Warning, factom-walletd API connection is unencrypted. Password is unprotected over the network.\n")
+	}
+
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
-		TLSEnable:         *TLSflag,
-		TLSKeyFile:        *TLSKeyflag,
-		TLSCertFile:       *TLSCertflag,
+		WalletTLSEnable:   *walletTLSflag,
+		WalletTLSKeyFile:  *walletTLSKey,
+		WalletTLSCertFile: *walletTLSCert,
 		WalletRPCUser:     *walletRpcUser,
 		WalletRPCPassword: *walletRpcPassword,
 	}
