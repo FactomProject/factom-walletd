@@ -10,7 +10,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"os/user"
 	"syscall"
 
 	"github.com/FactomProject/factom"
@@ -19,19 +18,11 @@ import (
 	"github.com/FactomProject/factomd/util"
 )
 
-var homedir = func() string {
-	usr, err := user.Current()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return usr.HomeDir
-}()
-
 func main() {
 	// configure the server
 	var (
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
-		wflag = flag.String("w", fmt.Sprint(homedir, "/.factom/wallet.db"),
+		wflag = flag.String("w", fmt.Sprint(util.GetHomeDir(), "/.factom/wallet.db"),
 			"set the default wallet location")
 		iflag         = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
 		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet") //to get tls, run as "factom-walletd -wallettls=true"
@@ -89,7 +80,7 @@ func main() {
 				fmt.Printf("using wallet TLS key file specified in \"%s\" at WalletTlsPrivateKey = \"%s\"\n", filename, cfg.Walletd.WalletTlsPrivateKey)
 				*walletTLSKey = cfg.Walletd.WalletTlsPrivateKey
 			} else { //if none were specified, use the default file
-				*walletTLSKey = fmt.Sprint(homedir, "/.factom/walletAPIpriv.key")
+				*walletTLSKey = fmt.Sprint(util.GetHomeDir(), "/.factom/walletAPIpriv.key")
 				fmt.Printf("using default wallet TLS key file \"%s\"\n", *walletTLSKey)
 			}
 		} else {
@@ -100,7 +91,7 @@ func main() {
 				fmt.Printf("using wallet TLS certificate file specified in \"%s\" at WalletTlsPublicCert = \"%s\"\n", filename, cfg.Walletd.WalletTlsPublicCert)
 				*walletTLSCert = cfg.Walletd.WalletTlsPublicCert
 			} else { //if none were specified, use the default file
-				*walletTLSCert = fmt.Sprint(homedir, "/.factom/walletAPIpub.cert")
+				*walletTLSCert = fmt.Sprint(util.GetHomeDir(), "/.factom/walletAPIpub.cert")
 				fmt.Printf("using default wallet TLS certificate file \"%s\"\n", *walletTLSCert)
 			}
 		} else {
@@ -138,7 +129,7 @@ func main() {
 	}
 
 	// open and add a transaction database to the wallet object.
-	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(homedir, "/.factom/txdb.db"))
+	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(util.GetHomeDir(), "/.factom/txdb.db"))
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
