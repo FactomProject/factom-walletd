@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/FactomProject/factom"
@@ -35,6 +36,7 @@ func main() {
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
+		walletdLocation = flag.String("addr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
 	)
 	flag.Parse()
 
@@ -101,6 +103,19 @@ func main() {
 		fmt.Printf("Warning, factom-walletd API connection is unencrypted. Password is unprotected over the network.\n")
 	}
 
+	if cfg.Walletd.WalletdLocation != "localhost:8089" {
+		//fmt.Printf("using factom-walletd location specified in \"%s\" as WalletdLocation = \"%s\"\n", filename, cfg.Walletd.WalletdLocation)
+		var externalIP string
+		externalIP += strings.Split(cfg.Walletd.WalletdLocation, ":")[0]
+		if *walletdLocation != "" {
+			*walletdLocation += ","
+		}
+		*walletdLocation += externalIP
+	}
+	if *walletdLocation != "" {
+		fmt.Printf("external IP and DNS name to use if making a new TLS keypair = %s\n", *walletdLocation)
+	}
+
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
 		WalletTLSEnable:   *walletTLSflag,
@@ -108,6 +123,7 @@ func main() {
 		WalletTLSCertFile: *walletTLSCert,
 		WalletRPCUser:     *walletRpcUser,
 		WalletRPCPassword: *walletRpcPassword,
+		WalletServer:      *walletdLocation,
 	}
 	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
 	factom.SetFactomdServer(*factomdLocation)
