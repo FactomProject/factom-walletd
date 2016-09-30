@@ -39,7 +39,7 @@ func main() {
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
-		walletdLocation = flag.String("addr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
+		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
 	)
 	flag.Parse()
 
