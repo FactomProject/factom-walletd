@@ -30,6 +30,9 @@ func main() {
 		walletTLSKey  = flag.String("walletkey", "", "This file is the PRIVATE TLS key encrypting connections to the wallet. (default ~/.factom/walletAPIpriv.key)")
 		walletTLSCert = flag.String("walletcert", "", "This file is the PUBLIC TLS certificate wallet API users will need to connect. (default ~/.factom/walletAPIpub.cert)")
 
+		factomdTLSflag = flag.Bool("factomdtls", false, "Set to true when the factomd API is encrypted")
+		factomdTLSCert = flag.String("factomdcert", "", "This file is the TLS certificate provided by the factomd API. (default ~/.factom/m2/factomdAPIpub.cert)")
+
 		walletRpcUser      = flag.String("walletuser", "", "Username to expect before allowing connections")
 		walletRpcPassword  = flag.String("walletpassword", "", "Password to expect before allowing connections")
 		factomdRpcUser     = flag.String("factomduser", "", "Username for API connections to factomd")
@@ -116,6 +119,23 @@ func main() {
 		fmt.Printf("external IP and DNS name to use if making a new TLS keypair = %s\n", *walletdLocation)
 	}
 
+	if cfg.App.FactomdTlsEnabled == true {
+		*factomdTLSflag = true
+	}
+	if *factomdTLSflag == true {
+		if *factomdTLSCert == "" { //if specified on the command line, don't use the config file
+			if cfg.App.FactomdTlsPublicCert != "/full/path/to/factomdAPIpub.cert" { //otherwise check if the the config file has something new
+				fmt.Printf("using wallet TLS certificate file specified in \"%s\" at FactomdTlsPublicCert = \"%s\"\n", filename, cfg.App.FactomdTlsPublicCert)
+				*factomdTLSCert = cfg.App.FactomdTlsPublicCert
+			} else { //if none were specified, use the default file
+				*factomdTLSCert = fmt.Sprint(util.GetHomeDir(), "/.factom/m2/factomdAPIpub.cert")
+				fmt.Printf("using default factomd TLS certificate file \"%s\"\n", *factomdTLSCert)
+			}
+		} else {
+			fmt.Printf("using specified factomd TLS certificate file \"%s\"\n", *factomdTLSCert)
+		}
+	}
+
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
 		WalletTLSEnable:   *walletTLSflag,
@@ -127,6 +147,7 @@ func main() {
 	}
 	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
 	factom.SetFactomdServer(*factomdLocation)
+	factom.SetFactomdEncryption(*factomdTLSflag, *factomdTLSCert)
 
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
