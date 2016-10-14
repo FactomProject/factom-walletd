@@ -178,10 +178,10 @@ func main() {
 		}
 		fmt.Printf("%q\n", m)
 		for _, f := range fs {
-			fmt.Println(f)
+			fmt.Println(f.SecString())
 		}
 		for _, e := range es {
-			fmt.Println(e)
+			fmt.Println(e.SecString())
 		}
 		os.Exit(0)
 	}
