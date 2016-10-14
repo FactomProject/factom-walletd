@@ -26,8 +26,8 @@ func main() {
 		wflag = flag.String("w", fmt.Sprint(util.GetHomeDir(), "/.factom/wallet.db"),
 			"set the default wallet location")
 		iflag         = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
-		mflag      = flag.String("m", "", "import a wallet from 12 word mnemonic")
-		eflag      = flag.Bool("e", false, "export a wallet for backup")
+		mflag         = flag.String("m", "", "import a wallet from 12 word mnemonic")
+		eflag         = flag.Bool("e", false, "export a wallet for backup")
 		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet") //to get tls, run as "factom-walletd -wallettls=true"
 		walletTLSKey  = flag.String("walletkey", "", "This file is the PRIVATE TLS key encrypting connections to the wallet. (default ~/.factom/walletAPIpriv.key)")
 		walletTLSCert = flag.String("walletcert", "", "This file is the PUBLIC TLS certificate wallet API users will need to connect. (default ~/.factom/walletAPIpub.cert)")
@@ -160,7 +160,7 @@ func main() {
 		w.Close()
 		os.Exit(0)
 	}
-	
+
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
 		w, err := wallet.ImportV1Wallet(*iflag, *wflag)
