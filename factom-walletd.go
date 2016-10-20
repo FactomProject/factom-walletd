@@ -23,12 +23,17 @@ func main() {
 	// configure the server
 	var (
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
-		wflag = flag.String("w", fmt.Sprint(util.GetHomeDir(), "/.factom/wallet.db"),
-			"set the default wallet location")
-		iflag         = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
-		mflag         = flag.String("m", "", "import a wallet from 12 word mnemonic")
-		eflag         = flag.Bool("e", false, "export a wallet for backup")
-		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet") //to get tls, run as "factom-walletd -wallettls=true"
+		wflag = flag.String(
+			"w",
+			util.GetHomeDir()+"/.factom/wallet/factom_wallet.db",
+			"set the default wallet location",
+		)
+		iflag = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
+		mflag = flag.String("m", "", "import a wallet from 12 word mnemonic")
+		eflag = flag.Bool("e", false, "export a wallet for backup")
+
+		// Use TLS for the wallet "factom-walletd -wallettls=true"
+		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet")
 		walletTLSKey  = flag.String("walletkey", "", "This file is the PRIVATE TLS key encrypting connections to the wallet. (default ~/.factom/walletAPIpriv.key)")
 		walletTLSCert = flag.String("walletcert", "", "This file is the PUBLIC TLS certificate wallet API users will need to connect. (default ~/.factom/walletAPIpub.cert)")
 
@@ -193,7 +198,7 @@ func main() {
 	}
 
 	// open and add a transaction database to the wallet object.
-	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(util.GetHomeDir(), "/.factom/txdb.db"))
+	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(util.GetHomeDir(), "/.factom/wallet/factoid_blocks.cache"))
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
