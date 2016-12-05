@@ -157,7 +157,7 @@ func main() {
 	factom.SetFactomdEncryption(*factomdTLSflag, *factomdTLSCert)
 
 	if *mflag != "" {
-		log.Printf("Creating new wallet with mnemonic", *iflag, *wflag)
+		log.Printf("Creating new wallet with mnemonic")
 		w, err := wallet.ImportWalletFromMnemonic(*mflag, *wflag)
 		if err != nil {
 			log.Fatal(err)
