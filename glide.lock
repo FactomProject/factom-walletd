@@ -1,10 +1,9 @@
 hash: 300b15820ffc47f9244b9da65fadca522f7fc9e9b1bf8be77288fd7a45929975
-updated: 2016-12-08T03:15:27.35022134-06:00
+updated: 2016-12-15T09:24:20.340564067-06:00
 imports:
 - name: github.com/btcsuitereleases/btcd
   version: e005ff2cdaac3b3a0b60c8d03978221b784ad50a
   subpackages:
-  - btcec
   - btcjson
   - chaincfg
   - txscript
@@ -21,12 +20,8 @@ imports:
   version: 302ad4db268b46f9ebda3078f6f7397f96047735
 - name: github.com/btcsuitereleases/go-socks
   version: cfe8b59e565c1a5bd4e2005d77cd9aa8b2e14524
-  subpackages:
-  - socks
 - name: github.com/btcsuitereleases/golangcrypto
   version: 05002d6890216a1a6df3acb9c2d6177a5cd28602
-  subpackages:
-  - ripemd160
 - name: github.com/btcsuitereleases/seelog
   version: 313961b101eb55f65ae0f03ddd4e322731763b6c
 - name: github.com/btcsuitereleases/websocket
@@ -55,7 +50,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 82ea84b2375840271429d3db05f9e4a86c3fc04d
+  version: 1079565fd8208c09a7b08a4ce4085170662e08e6
   subpackages:
   - wallet
   - wallet/wsapi
@@ -64,7 +59,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: f81520c499fa12d2bae4dadede5ee012cad7c706
+  version: 3311be77cd573a325a464b65fd68af51eca383cc
   subpackages:
   - anchor
   - common/adminBlock
@@ -75,7 +70,6 @@ imports:
   - common/entryCreditBlock
   - common/factoid
   - common/interfaces
-  - common/messages
   - common/primitives
   - database/blockExtractor
   - database/boltdb
@@ -84,7 +78,6 @@ imports:
   - database/leveldb
   - database/mapdb
   - log
-  - logger
   - util
 - name: github.com/FactomProject/go-bip32
   version: 3b593af1c415abc1017648e4eb24a88c32fee0f3
@@ -122,16 +115,16 @@ imports:
 - name: github.com/FactomProject/web
   version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
 - name: golang.org/x/crypto
-  version: 95cb608f365d51e0e69abc646ec90c0e26fb427f
+  version: 9a6f0a01987842989747adff311d80750ba25530
   subpackages:
   - pbkdf2
   - ripemd160
 - name: golang.org/x/net
-  version: 944c58e9d57bcecf171fd4bea155269aa8a96805
+  version: 468bac874d80e6ca892ecbb9bf09c72519b5b751
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: 478fcf54317e52ab69f40bb4c7a1520288d7f7ea
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
   - unix
 - name: gopkg.in/gcfg.v1
