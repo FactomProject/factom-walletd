@@ -1,5 +1,5 @@
 hash: 300b15820ffc47f9244b9da65fadca522f7fc9e9b1bf8be77288fd7a45929975
-updated: 2016-12-16T11:46:12.208777327-06:00
+updated: 2016-12-18T02:06:53.589450505-06:00
 imports:
 - name: github.com/btcsuitereleases/btcd
   version: e005ff2cdaac3b3a0b60c8d03978221b784ad50a
@@ -59,7 +59,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: 21224fc5864b381ea5f8a96bf5fcc3b78c445f6a
+  version: 937cf142b5b6b20442b728333439cf2be2c3a3df
   subpackages:
   - anchor
   - common/adminBlock
@@ -82,7 +82,7 @@ imports:
 - name: github.com/FactomProject/go-bip32
   version: 3b593af1c415abc1017648e4eb24a88c32fee0f3
 - name: github.com/FactomProject/go-bip39
-  version: b26bf5b8a88111792f0c215417dac76dd5d79e7c
+  version: d1007fb78d9a7ec65314dad412973e63caf4c527
 - name: github.com/FactomProject/go-bip44
   version: fd672f46ddc35bb381f497f7b64c9cf34f9e0703
 - name: github.com/FactomProject/go-simplejson
