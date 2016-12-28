@@ -6,8 +6,6 @@ owners:
   email: mahesh@factom.com
   homepage: https://factom.com
 import:
-- package: github.com/FactomProject/FactomCode
-  version: master
 - package: github.com/FactomProject/basen
   version: master
 - package: github.com/FactomProject/bolt
@@ -20,8 +18,6 @@ import:
 - package: github.com/FactomProject/btcutilecc
   version: master
 - package: github.com/FactomProject/ed25519
-  version: master
-- package: github.com/FactomProject/factoid
   version: master
 - package: github.com/FactomProject/factom
   version: develop
