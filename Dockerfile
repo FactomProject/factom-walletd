@@ -20,10 +20,6 @@ ARG GOOS=linux
 # Build and install factom-walletd
 RUN go install
 
-# Setup the cache directory
-RUN mkdir -p $HOME/.factom/m2
-COPY factomd.conf $HOME/.factom/m2/factomd.conf
-
 ENTRYPOINT ["/go/bin/factom-walletd"]
 
 EXPOSE 8089
