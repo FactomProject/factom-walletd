@@ -45,7 +45,7 @@ To cross-compile for a different target, you can pass in a `build-arg` as so
 #### Additional Flags
 In all cases, you can startup with additional flags by passing them at the end of the docker command, e.g.
 
-`docker run --rm -p 8089:8089 factom-walletd_container -port 9999`
+`docker run --rm -p 8089:8089 factom-walletd_container -p 9999`
 
 
 ## Copy
