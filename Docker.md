@@ -33,11 +33,11 @@ To cross-compile for a different target, you can pass in a `build-arg` as so
 #### With Persistence
 1. `docker volume create factom-walletd_volume`
 2. `docker run --rm -v $(PWD)/factomd.conf:/source -v factom-walletd_volume:/destination busybox /bin/cp /source /destination/factomd.conf`
-3. `docker run --rm -p 8089:8089 -v factom-walletd_volume:/root/.factom/m2 factom-walletd_container`
+3. `docker run --rm -p 8089:8089 -v factom-walletd_volume:/root/.factom/wallet factom-walletd_container`
 
 * This will start up **factom-walletd** with no flags.
 * When the container terminates, the data will remain persisted in the volume **factom-walletd_volume**
-* The above copies **factom-walletd.conf** from the local directory into the container. Put _your_ version in there, or change the path appropriately.
+* The above copies **factomd.conf** from the local directory into the container. Put _your_ version in there, or change the path appropriately.
 * **Note**.  In the above
    * replace **factom-walletd_container** with whatever you called it when you built it - e.g. **factom-walletd**, **foo**, etc.
    * replace **factom-walletd_volume** with whatever you might want to call it - e.g. **myvolume**, **barbaz**, etc.
@@ -73,4 +73,4 @@ e.g.
 
 which will copy the darwin_amd64 version of the binary to `/tmp/factom-walletd`
 
-**Note** : You should replace ** factom-walletd_container** with whatever you called it in the **build** section above  e.g. **factom-walletd**, **foo**, etc.
+**Note** : You should replace **factom-walletd_container** with whatever you called it in the **build** section above  e.g. **factom-walletd**, **foo**, etc.
