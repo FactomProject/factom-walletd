@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: e7e415550cf08b64fe17b9ae943f817fb97fb89a
+  version: e1c43503b5d330695cceed2b19d3b037de72fd90
   subpackages:
   - wallet
   - wallet/wsapi
@@ -63,7 +63,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: d1e672cf525f99dc993c78b5b0f28dfe219bf8ad
+  version: a178fc255f5cc96fc4e71fa32437f4cd9b80a779
   subpackages:
   - anchor
   - common/adminBlock
@@ -160,6 +160,8 @@ imports:
   - scanner
   - token
   - types
+- name: github.com/FactomProject/logrus
+  version: 202f25545ea4cf9b191ff7f846df5d87c9382c2b
 - name: gopkg.in/warnings.v0
   version: 8a331561fe74dadba6edfc59f3be66c22c3b065d
 testImports: []
