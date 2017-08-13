@@ -2,7 +2,7 @@ FROM golang:1.8.3
 
 # Get git
 RUN apt-get update \
-    && apt-get -y install curl git \
+    && apt-get -y install apt-utils curl git \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Get glide
