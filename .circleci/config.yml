@@ -2,8 +2,144 @@ version: 2
 
 jobs:
 
-  # Build containers
   build:
+    working_directory: /go/src/github.com/FactomProject/factom-walletd
+    docker:
+      - image: circleci/golang:1.8
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+
+      - run:
+          name: Get glide
+          command: |
+            go get -v github.com/Masterminds/glide
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get goveralls
+          command: |
+            go get github.com/mattn/goveralls
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get the dependencies
+          command: |
+            glide install
+
+      - run:
+          name: Build and install the executable
+          command: go install -v
+
+      - save_cache:
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+          paths:
+            - vendor
+
+  test:
+    working_directory: /go/src/github.com/FactomProject/factom-walletd
+    docker:
+      - image: circleci/golang:1.8
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+
+      - run:
+          name: Get glide
+          command: |
+            go get -v github.com/Masterminds/glide
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get goveralls
+          command: |
+            go get github.com/mattn/goveralls
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get the dependencies
+          command: |
+            glide install
+
+      - run:
+          name: Build and install the executable
+          command: go install -v
+
+      - run:
+          name: Run tests!
+          command: go test -v $(glide nv)
+
+
+      - save_cache:
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+          paths:
+            - vendor
+
+  coveralls:
+    working_directory: /go/src/github.com/FactomProject/factom-walletd
+    docker:
+      - image: circleci/golang:1.8
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+
+      - run:
+          name: Get glide
+          command: |
+            go get -v github.com/Masterminds/glide
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get goveralls
+          command: |
+            go get github.com/mattn/goveralls
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get the dependencies
+          command: |
+            glide install
+
+      - run:
+          name: Build and install the executable
+          command: go install -v
+
+      - run:
+          name: Coveralls!
+          command: goveralls -v -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
+
+
+      - save_cache:
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+          paths:
+            - vendor
+
+  # Build containers
+  docker_build:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
 
     docker:
@@ -19,7 +155,7 @@ jobs:
       #   Hence, checksumming glide.lock
       - restore_cache:
           keys:
-            - v4-factom-walletd-cache-{{ checksum "glide.lock" }}
+            - v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
 
       # Load the image if the cache hit
       - run:
@@ -84,110 +220,32 @@ jobs:
             docker save -o /images/factom-walletd.tar factom-walletd $(docker history -q factom-walletd |grep -v missing | grep -v none)
 
       - save_cache:
-          key: v4-factom-walletd-cache-{{ checksum "glide.lock" }}
+          key: v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
           paths:
             - /images
 
-
-  test:
-    working_directory: /go/src/github.com/FactomProject/factom-walletd
-    docker:
-      - image: circleci/golang:1.8
-
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
-
-      - run:
-          name: Get glide
-          command: |
-            go get -v github.com/Masterminds/glide
-            cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
-            go install
-
-      - run:
-          name: Get goveralls
-          command: |
-            go get github.com/mattn/goveralls
-            cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
-            go install
-
-      - run:
-          name: Get the dependencies
-          command: |
-            glide install
-
-      - run:
-          name: Build and install the executable
-          command: go install -v
-
-      - run:
-          name: Run tests!
-          command: go test -v $(glide nv)
-
-
-      - save_cache:
-          key: factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
-          paths:
-            - vendor
-
-  coveralls:
-    working_directory: /go/src/github.com/FactomProject/factom-walletd
-    docker:
-      - image: circleci/golang:1.8
-
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - factom-walletd-go-coveralls-cache-{{ checksum "glide.lock" }}
-
-      - run:
-          name: Get glide
-          command: |
-            go get -v github.com/Masterminds/glide
-            cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
-            go install
-
-      - run:
-          name: Get goveralls
-          command: |
-            go get github.com/mattn/goveralls
-            cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
-            go install
-
-      - run:
-          name: Get the dependencies
-          command: |
-            glide install
-
-      - run:
-          name: Build and install the executable
-          command: go install -v
-
-      - run:
-          name: Coveralls!
-          command: goveralls -v -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
-
-
-      - save_cache:
-          key: factom-walletd-go-coveralls-cache-{{ checksum "glide.lock" }}
-          paths:
-            - vendor
-
+# The flow is
+#    build
+#      |
+#      ---------- test
+#                   |
+#                   ---------- coveralls
+#                   |
+#                   ---------- docker_build
+#
+#
 workflows:
   version: 2
   build:
     jobs:
-      - build:
+      - build
+      - test:
+          requires:
+            - build
+      - coveralls:
+          requires:
+            - test
+      - docker_build:
           context: org-global
-      - test
-      - coveralls
+          requires:
+            - test
