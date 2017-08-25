@@ -29,7 +29,7 @@ RUN glide install -v
 ARG GOOS=linux
 
 # Build and install factom-walletd
-RUN go install
+RUN go install -ldflags "-X github.com/FactomProject/factom-walletd/vendor/github.com/FactomProject/factom/wallet.WalletVersion=`cat ./vendor/github.com/FactomProject/factom/wallet/VERSION`"
 
 ENTRYPOINT ["/go/bin/factom-walletd"]
 
