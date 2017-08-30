@@ -2,7 +2,7 @@ FROM golang:1.8.3
 
 # Get git
 RUN apt-get update \
-    && apt-get -y install curl git \
+    && apt-get -y install apt-utils curl git \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Get glide
@@ -29,7 +29,7 @@ RUN glide install -v
 ARG GOOS=linux
 
 # Build and install factom-walletd
-RUN go install
+RUN go install -ldflags "-X github.com/FactomProject/factom-walletd/vendor/github.com/FactomProject/factom/wallet.WalletVersion=`cat ./vendor/github.com/FactomProject/factom/wallet/VERSION`"
 
 ENTRYPOINT ["/go/bin/factom-walletd"]
 

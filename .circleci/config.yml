@@ -1,6 +1,49 @@
 version: 2
 
 jobs:
+
+  build:
+    working_directory: /go/src/github.com/FactomProject/factom-walletd
+    docker:
+      - image: circleci/golang:1.8
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+
+      - run:
+          name: Get glide
+          command: |
+            go get -v github.com/Masterminds/glide
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get goveralls
+          command: |
+            go get github.com/mattn/goveralls
+            cd $GOPATH/src/github.com/Masterminds/glide
+            git checkout tags/v0.12.3
+            go install
+
+      - run:
+          name: Get the dependencies
+          command: |
+            glide install
+
+      - run:
+          name: Build and install the executable
+          command: go install -v
+
+      - save_cache:
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+          paths:
+            - vendor
+
   test:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
@@ -11,7 +54,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
 
       - run:
           name: Get glide
@@ -44,7 +87,7 @@ jobs:
 
 
       - save_cache:
-          key: factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
           paths:
             - vendor
 
@@ -58,7 +101,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - factom-walletd-go-coveralls-cache-{{ checksum "glide.lock" }}
+            - v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
 
       - run:
           name: Get glide
@@ -91,13 +134,118 @@ jobs:
 
 
       - save_cache:
-          key: factom-walletd-go-coveralls-cache-{{ checksum "glide.lock" }}
+          key: v1-factom-walletd-go-build-cache-{{ checksum "glide.lock" }}
           paths:
             - vendor
 
+  # Build containers
+  docker_build:
+    working_directory: /go/src/github.com/FactomProject/factom-walletd
+
+    docker:
+      - image: docker:17.06.0-ce-git
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          version: 17.06.0-ce
+
+      # The main (only) thing we care about is caching the /vendor dir.
+      #   Hence, checksumming glide.lock
+      - restore_cache:
+          keys:
+            - v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
+
+      # Load the image if the cache hit
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /images/factom-walletd-alpine.tar | true
+            docker load -i /images/factom-walletd.tar | true
+
+      # Build the containers
+      - run:
+          name: Build the baseline images
+          command: |
+            docker build -t factom-walletd-alpine -f Dockerfile.alpine .
+            docker build -t factom-walletd -f Dockerfile .
+
+      - run:
+          name: Push  master / develop to DockerHub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+
+              # If there is a tag, use it
+              if [ "$CIRCLE_TAG" != "" ]; then
+                docker tag factom-walletd-alpine factominc/factom-walletd:${TAG}-alpine
+                docker push factominc/factom-walletd:${TAG}-alpine
+                docker tag factom-walletd factominc/factom-walletd:${TAG}
+                docker push factominc/factom-walletd:${TAG}
+              fi
+
+              # But tag it as alpine/latest anyhow
+              docker tag factom-walletd-alpine factominc/factom-walletd:alpine
+              docker push factominc/factom-walletd:alpine
+              docker tag factom-walletd factominc/factom-walletd:latest
+              docker push factominc/factom-walletd:latest
+
+            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+
+              # If there is a tag, use it
+              if [ "$CIRCLE_TAG" != "" ]; then
+                docker tag factom-walletd-alpine factominc/factom-walletd:${TAG}-alpine-develop
+                docker push factominc/factom-walletd:${TAG}-alpine-develop
+                docker tag factom-walletd factominc/factom-walletd:${TAG}-develop
+                docker push factominc/factom-walletd:${TAG}-develop
+              fi
+
+              # But tag it as alpine-develop/develop anyhow
+              docker tag factom-walletd-alpine factominc/factom-walletd:alpine-develop
+              docker push factominc/factom-walletd:alpine-develop
+              docker tag factom-walletd factominc/factom-walletd:develop
+              docker push factominc/factom-walletd:develop
+            fi
+
+            docker logout
+
+      - run:
+          name: Save the image cache
+          command: |
+            mkdir -p /images
+            docker save -o /images/factom-walletd-alpine.tar factom-walletd-alpine $(docker history -q factom-walletd-alpine |grep -v missing | grep -v none)
+            docker save -o /images/factom-walletd.tar factom-walletd $(docker history -q factom-walletd |grep -v missing | grep -v none)
+
+      - save_cache:
+          key: v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
+          paths:
+            - /images
+
+# The flow is
+#    build
+#      |
+#      ---------- test
+#                   |
+#                   ---------- coveralls
+#                   |
+#                   ---------- docker_build
+#
+#
 workflows:
   version: 2
   build:
     jobs:
-      - "test"
-      - "coveralls"
+      - build
+      - test:
+          requires:
+            - build
+      - coveralls:
+          requires:
+            - test
+      - docker_build:
+          context: org-global
+          requires:
+            - test
