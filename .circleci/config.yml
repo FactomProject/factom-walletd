@@ -5,7 +5,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
   test:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
@@ -94,7 +94,7 @@ jobs:
   coveralls:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
