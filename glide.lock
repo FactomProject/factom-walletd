@@ -1,5 +1,5 @@
 hash: 550f7ef7cdcb42ddb76b6ee79a01965bc85fa094fb8b541101365f573d37fa59
-updated: 2017-09-06T15:12:16.340255755-05:00
+updated: 2017-09-06T15:18:55.399861056-05:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -33,7 +33,7 @@ imports:
 - name: github.com/FactomProject/basen
   version: fe3947df716ebfda9847eb1b9a48f9592e06478c
 - name: github.com/FactomProject/bolt
-  version: 7d662c5bb27d9defa01fa0563959594bb77ee62b
+  version: 952a1b4e9a55f458d536cf703bce25a4e9c99841
 - name: github.com/FactomProject/btcutil
   version: 43986820ccd50b2b02b83e575cb3a39c87457482
   subpackages:
@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: e6c724dab16eeee00f5504ccd42eebad5ce48b86
+  version: a486fd151826b04e5184b6136766d3feb10597d6
   subpackages:
   - wallet
   - wallet/wsapi
@@ -116,7 +116,7 @@ imports:
 - name: github.com/FactomProject/netki-go-partner-client
   version: 426acb535e66cc2f9e6226ae254555e3572fd142
 - name: github.com/FactomProject/snappy-go
-  version: fff4c573c694b1e2d5c7a9b2b72dbe947b6a4c8e
+  version: f2f83b22c29e5abc60e3a95062ce1491d3b95371
 - name: github.com/FactomProject/web
   version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
 - name: github.com/golang/protobuf
@@ -144,16 +144,16 @@ imports:
 - name: github.com/prometheus/procfs
   version: abf152e5f3e97f2fafac028d2cc06c1feb87ffa5
 - name: golang.org/x/crypto
-  version: 91902e332b9d47760598861512d2ae148f94ca58
+  version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
   - pbkdf2
   - ripemd160
 - name: golang.org/x/net
-  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  version: 66aacef3dd8a676686c7ae3716979581e8b03c47
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  version: 9aade4d3a3b7e6d876cd3823ad20ec45fc035402
   subpackages:
   - unix
 - name: gopkg.in/gcfg.v1

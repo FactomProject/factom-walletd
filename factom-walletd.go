@@ -211,10 +211,9 @@ func main() {
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *lflag {
-			return wallet.NewOrOpenBoltDBWallet(walletPath)
-		} else {
 			return wallet.NewOrOpenLevelDBWallet(walletPath)
 		}
+		return wallet.NewOrOpenBoltDBWallet(walletPath)
 	}()
 	if err != nil {
 		log.Fatal(err)
