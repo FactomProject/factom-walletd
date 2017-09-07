@@ -5,7 +5,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
   test:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
@@ -94,7 +94,7 @@ jobs:
   coveralls:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.9
 
     steps:
       - checkout
@@ -155,7 +155,7 @@ jobs:
       #   Hence, checksumming glide.lock
       - restore_cache:
           keys:
-            - v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
+            - v2-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
 
       # Load the image if the cache hit
       - run:
@@ -220,7 +220,7 @@ jobs:
             docker save -o /images/factom-walletd.tar factom-walletd $(docker history -q factom-walletd |grep -v missing | grep -v none)
 
       - save_cache:
-          key: v1-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
+          key: v2-factom-walletd-docker-cache-{{ checksum "glide.lock" }}
           paths:
             - /images
 
