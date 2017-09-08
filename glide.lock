@@ -1,5 +1,5 @@
 hash: 550f7ef7cdcb42ddb76b6ee79a01965bc85fa094fb8b541101365f573d37fa59
-updated: 2017-09-06T15:18:55.399861056-05:00
+updated: 2017-09-08T16:58:47.100467421-05:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -63,7 +63,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: c5250b7b88b3800abce515d12475e04f319721a4
+  version: 780a3278b76e7d4e0f3d7facd3b71234de84f5ea
   subpackages:
   - anchor
   - common/adminBlock
@@ -153,7 +153,7 @@ imports:
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: 9aade4d3a3b7e6d876cd3823ad20ec45fc035402
+  version: 5513e650ab47a692d3a036d49be8fa52ddd09b65
   subpackages:
   - unix
 - name: gopkg.in/gcfg.v1
