@@ -206,8 +206,6 @@ func main() {
 		os.Exit(0)
 	}
 
-
-
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *lflag {
