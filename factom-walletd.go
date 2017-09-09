@@ -25,12 +25,13 @@ func main() {
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
 		wflag = flag.String(
 			"w",
-			util.GetHomeDir()+"/.factom/wallet/factom_wallet.db",
+			"",
 			"set the default wallet location",
 		)
 		iflag = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
 		mflag = flag.String("m", "", "import a wallet from 12 word mnemonic")
 		eflag = flag.Bool("e", false, "export a wallet for backup")
+		lflag = flag.Bool("l", false, "Create or use an LDB database")
 
 		// Use TLS for the wallet "factom-walletd -wallettls=true"
 		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet")
@@ -49,6 +50,20 @@ func main() {
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
 	)
 	flag.Parse()
+	
+	// set the wallet path to the wflag or to the default
+	walletPath := func() string {
+		// use the wflag for the wallet path if it is spcified
+		if *wflag != "" {
+			return *wflag
+		}
+		
+		// use a default for ldb or bolt
+		if *lflag {
+			return util.GetHomeDir()+"/.factom/wallet/factom_wallet.ldb"
+		}
+		return util.GetHomeDir()+"/.factom/wallet/factom_wallet.db"
+	}()
 
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
@@ -158,7 +173,7 @@ func main() {
 
 	if *mflag != "" {
 		log.Printf("Creating new wallet with mnemonic")
-		w, err := wallet.ImportWalletFromMnemonic(*mflag, *wflag)
+		w, err := wallet.ImportWalletFromMnemonic(*mflag, walletPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -167,8 +182,8 @@ func main() {
 	}
 
 	if *iflag != "" {
-		log.Printf("Importing version 1 wallet %s into %s", *iflag, *wflag)
-		w, err := wallet.ImportV1Wallet(*iflag, *wflag)
+		log.Printf("Importing version 1 wallet %s into %s", *iflag, walletPath)
+		w, err := wallet.ImportV1Wallet(*iflag, walletPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -177,7 +192,7 @@ func main() {
 	}
 
 	if *eflag {
-		m, fs, es, err := wallet.ExportWallet(*wflag)
+		m, fs, es, err := wallet.ExportWallet(walletPath)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -192,7 +207,12 @@ func main() {
 	}
 
 	// open or create a new wallet file
-	fctWallet, err := wallet.NewOrOpenBoltDBWallet(*wflag)
+	fctWallet, err := func() (*wallet.Wallet, error) {
+		if *lflag {
+			return wallet.NewOrOpenLevelDBWallet(walletPath)
+		}
+		return wallet.NewOrOpenBoltDBWallet(walletPath)
+	}()
 	if err != nil {
 		log.Fatal(err)
 	}
