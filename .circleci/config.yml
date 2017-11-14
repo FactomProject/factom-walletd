@@ -143,7 +143,7 @@ jobs:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
 
     docker:
-      - image: docker:17.06.0-ce-git
+      - image: factominc/elixir_python
 
     steps:
       - checkout
@@ -172,45 +172,75 @@ jobs:
             docker build -t factom-walletd-alpine -f Dockerfile.alpine .
             docker build -t factom-walletd -f Dockerfile .
 
+      # Push, depending on branch/tag
       - run:
           name: Push  master / develop to DockerHub
           command: |
+
+           # Login to DockerHub
             docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+            # If there is a tag, use it
+            if [ "$CIRCLE_TAG" != "" ]; then
+              docker tag factom-walletd factominc/factom-walletd:${CIRCLE_TAG}
+              docker push factominc/factom-walletd:${CIRCLE_TAG}
+              docker tag factom-walletd-alpine factominc/factom-walletd:${CIRCLE_TAG}-alpine
+              docker push factominc/factom-walletd:${CIRCLE_TAG}-alpine
+            fi
 
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
 
-              # If there is a tag, use it
-              if [ "$CIRCLE_TAG" != "" ]; then
-                docker tag factom-walletd-alpine factominc/factom-walletd:${TAG}-alpine
-                docker push factominc/factom-walletd:${TAG}-alpine
-                docker tag factom-walletd factominc/factom-walletd:${TAG}
-                docker push factominc/factom-walletd:${TAG}
-              fi
-
-              # But tag it as alpine/latest anyhow
-              docker tag factom-walletd-alpine factominc/factom-walletd:alpine
-              docker push factominc/factom-walletd:alpine
+              # Tag master as latest
               docker tag factom-walletd factominc/factom-walletd:latest
               docker push factominc/factom-walletd:latest
+              docker tag factom-walletd-alpine factominc/factom-walletd:alpine
+              docker push factominc/factom-walletd:alpine
+            fi
 
-            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
 
-              # If there is a tag, use it
-              if [ "$CIRCLE_TAG" != "" ]; then
-                docker tag factom-walletd-alpine factominc/factom-walletd:${TAG}-alpine-develop
-                docker push factominc/factom-walletd:${TAG}-alpine-develop
-                docker tag factom-walletd factominc/factom-walletd:${TAG}-develop
-                docker push factominc/factom-walletd:${TAG}-develop
-              fi
-
-              # But tag it as alpine-develop/develop anyhow
-              docker tag factom-walletd-alpine factominc/factom-walletd:alpine-develop
-              docker push factominc/factom-walletd:alpine-develop
+              # Tag develop as develop anyhow
               docker tag factom-walletd factominc/factom-walletd:develop
               docker push factominc/factom-walletd:develop
+              docker tag factom-walletd-alpine factominc/factom-walletd:alpine-develop
+              docker push factominc/factom-walletd:alpine-develop
             fi
 
             docker logout
+
+      - run:
+          name: Push images to AWS ECR
+          command: |
+            # Login to AWS ECR
+            login="$(aws ecr get-login  --no-include-email --region $AWS_REGION)"
+            ${login}
+
+            # If there is a tag, use it
+            if [ "$CIRCLE_TAG" != "" ]; then
+              docker tag factom-walletd ${AWS_REPO_BASE_URI}/factom-walletd:${CIRCLE_TAG}
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:${CIRCLE_TAG}
+              docker tag factom-walletd-alpine ${AWS_REPO_BASE_URI}/factom-walletd:${CIRCLE_TAG}-alpine
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:${CIRCLE_TAG}-alpine
+            fi
+
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+
+              # Tag master as latest
+              docker tag factom-walletd ${AWS_REPO_BASE_URI}/factom-walletd:latest
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:latest
+              docker tag factom-walletd-alpine ${AWS_REPO_BASE_URI}/factom-walletd:alpine
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:alpine
+            fi
+
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+
+              # Tag develop as develop anyhow
+              docker tag factom-walletd ${AWS_REPO_BASE_URI}/factom-walletd:develop
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:develop
+              docker tag factom-walletd-alpine ${AWS_REPO_BASE_URI}/factom-walletd:alpine-develop
+              docker push ${AWS_REPO_BASE_URI}/factom-walletd:alpine-develop
+            fi
+
 
       - run:
           name: Save the image cache
@@ -266,7 +296,7 @@ workflows:
   scheduled-workflow:
     triggers:
       - schedule:
-          cron: "40 5 * * *"
+          cron: "0 4 * * *"
           filters:
             branches:
               only: develop
