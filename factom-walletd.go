@@ -59,10 +59,7 @@ func main() {
 		}
 		
 		// use a default for ldb or bolt
-		if *lflag {
-			return util.GetHomeDir()+"/.factom/wallet/factom_wallet.ldb"
-		}
-		return util.GetHomeDir()+"/.factom/wallet/factom_wallet.db"
+		return util.GetHomeDir()+"/.factom/wallet/factom_wallet"
 	}()
 
 	//see if the config file has values which should be used instead of null strings
