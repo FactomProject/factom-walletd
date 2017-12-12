@@ -52,16 +52,11 @@ func main() {
 	flag.Parse()
 	
 	// set the wallet path to the wflag or to the default
-	walletPath := func() string {
-		// use the wflag for the wallet path if it is spcified
-		if *wflag != "" {
-			return *wflag
-		}
-		
-		// use a default for ldb or bolt
-		return util.GetHomeDir()+"/.factom/wallet/factom_wallet"
-	}()
-
+	walletPath := util.GetHomeDir()+"/.factom/wallet/factom_wallet"
+	if *wflag != "" {
+		walletPath = *wflag
+	}
+	
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
 	cfg := util.ReadConfig(filename)
