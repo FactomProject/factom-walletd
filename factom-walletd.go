@@ -209,16 +209,16 @@ func main() {
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *lflag {
-			return wallet.NewOrOpenLevelDBWallet(walletPath)
+			return wallet.NewOrOpenLevelDBWallet(walletPath+".ldb")
 		}
-		return wallet.NewOrOpenBoltDBWallet(walletPath)
+		return wallet.NewOrOpenBoltDBWallet(walletPath+".db")
 	}()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// open and add a transaction database to the wallet object.
-	txdb, err := wallet.NewTXBoltDB(fmt.Sprint(util.GetHomeDir(), "/.factom/wallet/factoid_blocks.cache"))
+	txdb, err := wallet.NewTXBoltDB(walletPath+".cache")
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
