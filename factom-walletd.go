@@ -50,13 +50,13 @@ func main() {
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
 	)
 	flag.Parse()
-	
+
 	// set the wallet path to the wflag or to the default
-	walletPath := util.GetHomeDir()+"/.factom/wallet/factom_wallet"
+	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet"
 	if *wflag != "" {
 		walletPath = *wflag
 	}
-	
+
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
 	cfg := util.ReadConfig(filename)
@@ -201,16 +201,16 @@ func main() {
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *lflag {
-			return wallet.NewOrOpenLevelDBWallet(walletPath+".ldb")
+			return wallet.NewOrOpenLevelDBWallet(walletPath + ".ldb")
 		}
-		return wallet.NewOrOpenBoltDBWallet(walletPath+".db")
+		return wallet.NewOrOpenBoltDBWallet(walletPath + ".db")
 	}()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// open and add a transaction database to the wallet object.
-	txdb, err := wallet.NewTXBoltDB(walletPath+".cache")
+	txdb, err := wallet.NewTXBoltDB(walletPath + ".cache")
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
