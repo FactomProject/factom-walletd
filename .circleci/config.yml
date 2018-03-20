@@ -5,7 +5,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.10
 
     steps:
       - checkout
@@ -19,7 +19,7 @@ jobs:
           command: |
             go get -v github.com/Masterminds/glide
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -27,7 +27,7 @@ jobs:
           command: |
             go get github.com/mattn/goveralls
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -47,7 +47,7 @@ jobs:
   test:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.10
 
     steps:
       - checkout
@@ -61,7 +61,7 @@ jobs:
           command: |
             go get -v github.com/Masterminds/glide
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -69,7 +69,7 @@ jobs:
           command: |
             go get github.com/mattn/goveralls
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -83,7 +83,7 @@ jobs:
 
       - run:
           name: Run tests!
-          command: go test -v $(glide nv)
+          command: go test -v -vet=off $(glide nv)
 
 
       - save_cache:
@@ -94,7 +94,7 @@ jobs:
   coveralls:
     working_directory: /go/src/github.com/FactomProject/factom-walletd
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.10
 
     steps:
       - checkout
@@ -108,7 +108,7 @@ jobs:
           command: |
             go get -v github.com/Masterminds/glide
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -116,7 +116,7 @@ jobs:
           command: |
             go get github.com/mattn/goveralls
             cd $GOPATH/src/github.com/Masterminds/glide
-            git checkout tags/v0.12.3
+            git checkout tags/v0.13.1
             go install
 
       - run:
@@ -130,7 +130,7 @@ jobs:
 
       - run:
           name: Coveralls!
-          command: goveralls -v -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
+          command: goveralls -v -flags "-vet=off" -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
 
 
       - save_cache:
