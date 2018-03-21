@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 0e9a0f6f4ef0da412fb01668a114a82411e1bebf
+  version: 32670a9a1fb6a0549a1f8f93fd48a471370e9f50
   subpackages:
   - wallet
   - wallet/wsapi
@@ -171,3 +171,6 @@ imports:
 - name: gopkg.in/warnings.v0
   version: ec4a0fea49c7b46c2aeb0b51aac55779c607e52b
 testImports: []
+
+
+ 
