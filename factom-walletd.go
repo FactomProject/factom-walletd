@@ -52,7 +52,10 @@ func main() {
 	flag.Parse()
 
 	// set the wallet path to the wflag or to the default
-	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet"
+	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet.db"
+	if *lflag {
+		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
+	}
 	if *wflag != "" {
 		walletPath = *wflag
 	}
@@ -165,17 +168,28 @@ func main() {
 
 	if *mflag != "" {
 		log.Printf("Creating new wallet with mnemonic")
-		w, err := wallet.ImportWalletFromMnemonic(*mflag, walletPath)
+		w, err := func() (*wallet.Wallet, error) {
+			if *lflag {
+				return wallet.ImportLDBWalletFromMnemonic(*mflag, walletPath)
+			}
+			return wallet.ImportWalletFromMnemonic(*mflag, walletPath)
+		}()
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		w.Close()
 		os.Exit(0)
 	}
 
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, walletPath)
-		w, err := wallet.ImportV1Wallet(*iflag, walletPath)
+		w, err := func() (*wallet.Wallet, error) {
+			if *lflag {
+				return wallet.ImportV1WalletToLDB(*iflag, walletPath)
+			}
+			return wallet.ImportV1Wallet(*iflag, walletPath)
+		}()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -184,7 +198,12 @@ func main() {
 	}
 
 	if *eflag {
-		m, fs, es, err := wallet.ExportWallet(walletPath)
+		m, fs, es, err := func() (string, []*factom.FactoidAddress, []*factom.ECAddress, error) {
+			if *lflag {
+				return wallet.ExportLDBWallet(walletPath)
+			}
+			return wallet.ExportWallet(walletPath)
+		}()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -201,9 +220,9 @@ func main() {
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *lflag {
-			return wallet.NewOrOpenLevelDBWallet(walletPath + ".ldb")
+			return wallet.NewOrOpenLevelDBWallet(walletPath)
 		}
-		return wallet.NewOrOpenBoltDBWallet(walletPath + ".db")
+		return wallet.NewOrOpenBoltDBWallet(walletPath)
 	}()
 	if err != nil {
 		log.Fatal(err)
