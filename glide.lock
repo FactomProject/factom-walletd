@@ -1,8 +1,8 @@
 hash: 550f7ef7cdcb42ddb76b6ee79a01965bc85fa094fb8b541101365f573d37fa59
-updated: 2017-12-21T18:30:54.812676333-06:00
+updated: 2018-07-27T16:03:24.328261713-05:00
 imports:
 - name: github.com/beorn7/perks
-  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  version: 3a771d992973f24aa725d07868b467d1ddfceafb
   subpackages:
   - quantile
 - name: github.com/btcsuitereleases/btcd
@@ -54,17 +54,18 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 32670a9a1fb6a0549a1f8f93fd48a471370e9f50
+  version: cee7b4bf3f9ed2ad60f05dab6afc8291eafba075
   subpackages:
   - wallet
   - wallet/wsapi
 - name: github.com/FactomProject/FactomCode
-  version: fa03af8ca695eb98cef90a71fd0f506cf54ddbe8
+  version: d7e03150a9d5d8672e52a0769a4c6376f5c12631
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: e5d18ce6d4dd23a085db03d0f5e58ee88ad629be
+  version: 1c3989b2497b45f78421302347cba330a90fc8fe
   subpackages:
+  - activations
   - anchor
   - common/adminBlock
   - common/constants
@@ -73,6 +74,7 @@ imports:
   - common/entryBlock
   - common/entryCreditBlock
   - common/factoid
+  - common/globals
   - common/interfaces
   - common/primitives
   - common/primitives/random
@@ -119,7 +121,7 @@ imports:
 - name: github.com/FactomProject/web
   version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
 - name: github.com/golang/protobuf
-  version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
+  version: 05f48f4eaf0e05663b562bab533cdd472238ce29
   subpackages:
   - proto
 - name: github.com/matttproud/golang_protobuf_extensions
@@ -127,7 +129,7 @@ imports:
   subpackages:
   - pbutil
 - name: github.com/prometheus/client_golang
-  version: 661e31bf844dfca9aeba15f27ea8aa0d485ad212
+  version: faf4ec335fe01ae5a6a0eaa34a5a9333bfbd1a30
   subpackages:
   - prometheus
 - name: github.com/prometheus/client_model
@@ -135,35 +137,37 @@ imports:
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: 2e54d0b93cba2fd133edc32211dcc32c06ef72ca
+  version: 7600349dcfe1abd18d72d3a1770870d9800a7801
   subpackages:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: a6e9df898b1336106c743392c48ee0b71f5c4efa
+  version: 94663424ae5ae9856b40a9f170762b4197024661
   subpackages:
+  - internal/util
+  - nfs
   - xfs
 - name: github.com/sirupsen/logrus
-  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
+  version: ea8897e79973357ba785ac2533559a6297e83c44
 - name: golang.org/x/crypto
-  version: 94eea52f7b742c7cbe0b03b22f0c4c8631ece122
+  version: c126467f60eb25f8f27e5a981f32a87e3965053f
   subpackages:
   - pbkdf2
   - ripemd160
   - scrypt
   - ssh/terminal
 - name: golang.org/x/net
-  version: d866cfc389cec985d6fda2859936a575a55a3ab6
+  version: 3673e40ba22529d22c3fd7c93e97b0ce50fa7bdd
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: d5840adf789d732bc8b00f37b26ca956a7cc8e79
+  version: 10b189e7aa37dd026e4c1c16d84c6515a393f8ed
   subpackages:
   - unix
   - windows
 - name: gopkg.in/gcfg.v1
-  version: 298b7a6a3838f79debfaee8bd3bfb2b8d779e756
+  version: 61b2c08bc8f6068f7c5ca684372f9a6cb1c45ebe
   subpackages:
   - scanner
   - token
@@ -171,6 +175,3 @@ imports:
 - name: gopkg.in/warnings.v0
   version: ec4a0fea49c7b46c2aeb0b51aac55779c607e52b
 testImports: []
-
-
- 
