@@ -20,12 +20,12 @@ import:
 - package: github.com/FactomProject/ed25519
   version: master
 - package: github.com/FactomProject/factom
-  version: develop
+  version: FD-567_FCT_EC_APIs
   subpackages:
   - wallet
   - wallet/wsapi
 - package: github.com/FactomProject/factomd
-  version: develop
+  version: FD-567_FCT_EC_APIs
   subpackages:
   - util
 - package: github.com/FactomProject/go-bip32
