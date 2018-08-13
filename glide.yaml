@@ -2,8 +2,8 @@ package: github.com/FactomProject/factom-walletd
 homepage: https://github.com/FactomProject/factom-walletd
 license: MIT
 owners:
-- name: Mahesh Paolini-Subramanya
-  email: mahesh@factom.com
+- name: Factom
+  email: hello@factom.com
   homepage: https://factom.com
 import:
 - package: github.com/FactomProject/basen
