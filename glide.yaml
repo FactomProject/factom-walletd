@@ -2,8 +2,8 @@ package: github.com/FactomProject/factom-walletd
 homepage: https://github.com/FactomProject/factom-walletd
 license: MIT
 owners:
-- name: Mahesh Paolini-Subramanya
-  email: mahesh@factom.com
+- name: Factom
+  email: hello@factom.com
   homepage: https://factom.com
 import:
 - package: github.com/FactomProject/basen
@@ -20,12 +20,12 @@ import:
 - package: github.com/FactomProject/ed25519
   version: master
 - package: github.com/FactomProject/factom
-  version: FD-567_FCT_EC_APIs
+  version: develop
   subpackages:
   - wallet
   - wallet/wsapi
 - package: github.com/FactomProject/factomd
-  version: FD-567_FCT_EC_APIs
+  version: develop
   subpackages:
   - util
 - package: github.com/FactomProject/go-bip32
