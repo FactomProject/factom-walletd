@@ -1,5 +1,5 @@
-hash: fdff3a3913ba3b2f25bf95c22446d011899c602c0926369f33e63d22e05074b8
-updated: 2018-08-13T15:09:30.174967766-05:00
+hash: b36064c3da1bc9dce5f2e117df81aff1ab8d5977e56186b3ec8d7f33b1936954
+updated: 2018-08-24T15:56:33.880800432-05:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 375f439eae855fe83a6f740117c65f9b4586641d
+  version: 0473b0dd9b46610c9e521bd852a93e3e091d7f37
   subpackages:
   - wallet
   - wallet/wsapi
@@ -63,7 +63,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: d6294ee647a03f41cd3560a1e0b58a7e1ed680af
+  version: feb1b81eff8c440f76cf2866ceeb9207974bcef2
   subpackages:
   - activations
   - anchor
@@ -149,18 +149,18 @@ imports:
 - name: github.com/sirupsen/logrus
   version: 89742aefa4b206dcf400792f3bd35b542998eb3b
 - name: golang.org/x/crypto
-  version: de0752318171da717af4ce24d0a2e8626afaeb11
+  version: 614d502a4dac94afa3a6ce146bd1736da82514c6
   subpackages:
   - pbkdf2
   - ripemd160
   - scrypt
   - ssh/terminal
 - name: golang.org/x/net
-  version: c39426892332e1bb5ec0a434a079bf82f5d30c54
+  version: aaf60122140d3fcf75376d319f0554393160eb50
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: 98c5dad5d1a0e8a73845ecc8897d0bd56586511d
+  version: 1a700e749ce29638d0bbcb531cce1094ea096bd3
   subpackages:
   - unix
   - windows
