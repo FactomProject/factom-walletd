@@ -16,6 +16,7 @@ import (
 	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factom/wallet/wsapi"
+	"github.com/FactomProject/factomd/database/securedb"
 	"github.com/FactomProject/factomd/util"
 )
 
@@ -48,14 +49,28 @@ func main() {
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
+		encryptedDB     = flag.Bool("walletencrypted", false, "Option to enable encryption for database when not in use.")
+		password        = flag.String("passphrase", "", "Password used to encrypt/decrypt the wallet")
 	)
 	flag.Parse()
+
+	// Conditions around using the encrypted wallet
+	if *encryptedDB {
+		if *password == "" {
+			fmt.Println("When using the '-walletencrypted', you must also specifiy a '-passphrase'")
+			os.Exit(1)
+		}
+	}
 
 	// set the wallet path to the wflag or to the default
 	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet.db"
 	if *lflag {
 		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
 	}
+	if *encryptedDB {
+		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
+	}
+
 	if *wflag != "" {
 		walletPath = *wflag
 	}
@@ -169,6 +184,9 @@ func main() {
 	if *mflag != "" {
 		log.Printf("Creating new wallet with mnemonic")
 		w, err := func() (*wallet.Wallet, error) {
+			if *encryptedDB {
+				return wallet.ImportEncryptedWalletFromMnemonic(*mflag, walletPath, *password)
+			}
 			if *lflag {
 				return wallet.ImportLDBWalletFromMnemonic(*mflag, walletPath)
 			}
@@ -185,6 +203,9 @@ func main() {
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, walletPath)
 		w, err := func() (*wallet.Wallet, error) {
+			if *encryptedDB {
+				return wallet.ImportV1WalletToEncryptedDB(*iflag, walletPath, *password)
+			}
 			if *lflag {
 				return wallet.ImportV1WalletToLDB(*iflag, walletPath)
 			}
@@ -219,6 +240,9 @@ func main() {
 
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
+		if *encryptedDB {
+			return wallet.NewEncryptedBoltDBWallet(walletPath, *password)
+		}
 		if *lflag {
 			return wallet.NewOrOpenLevelDBWallet(walletPath)
 		}
@@ -245,6 +269,11 @@ func main() {
 			wsapi.Stop()
 		}
 	}()
+
+	// If it is encrypted, we need to start the wallet as locked
+	if *encryptedDB {
+		fctWallet.DBO.DB.(*securedb.EncryptedDB).Lock()
+	}
 
 	// start the wsapi server
 	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), RPCConfig)
