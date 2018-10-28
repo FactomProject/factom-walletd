@@ -54,22 +54,13 @@ func main() {
 	)
 	flag.Parse()
 
-	// Conditions around using the encrypted wallet
-	if *encryptedDB {
-		if *password == "" {
-			fmt.Println("When using the '-walletencrypted', you must also specifiy a '-passphrase'")
-			os.Exit(1)
-		}
-	}
-
 	// set the wallet path to the wflag or to the default
 	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet.db"
 	if *lflag {
 		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
 	}
-	if *encryptedDB {
-		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
-	}
+
+	encryptedPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
 
 	if *wflag != "" {
 		walletPath = *wflag
@@ -78,6 +69,48 @@ func main() {
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
 	cfg := util.ReadConfig(filename)
+
+	if !*encryptedDB {
+		if cfg.Walletd.WalletEncrypted {
+			*encryptedDB = true
+		}
+	}
+
+	// Conditions around using the encrypted wallet
+	if *encryptedDB {
+		if *password == "" {
+			fmt.Println("WalletEncryption option is enabled. When using an encrypted database, you must also specifiy a '-passphrase'")
+			os.Exit(1)
+		}
+
+		// Check if regular wallet exists
+		_, err := os.Stat(walletPath)
+		if !os.IsNotExist(err) {
+			// Regular wallet exists, exit
+			fmt.Printf("Encrypted Wallet option was selected, however an unencrypted wallet already exists."+
+				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption. "+
+				"(Back it up before deleting!)\n", walletPath)
+			os.Exit(1)
+		}
+
+		// Change the path to encrypted path
+		walletPath = encryptedPath
+	} else {
+		_, err := os.Stat(encryptedPath)
+		if !os.IsNotExist(err) {
+			// Regular wallet exists, exit
+			fmt.Printf("The wallet is being launched without database encryption,"+
+				" however an encrypted wallet already exists."+
+				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption."+
+				" (Back it up before deleting!)\n", encryptedPath)
+
+			os.Exit(1)
+		}
+
+		fmt.Printf("Warning, factom-walletd database is not encrypted. Private keys are stored plainly.\n")
+
+		// Check if encrypted wallet exists
+	}
 
 	if *walletRpcUser == "" {
 		if cfg.Walletd.WalletRpcUser != "" {
