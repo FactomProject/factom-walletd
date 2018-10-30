@@ -33,7 +33,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 27c6cd7271cf79e69d9db86d0d9498f9bc9d1a59
+  version: 09534ac56566d655cbdd49d38de85dc41cf62ca5
   subpackages:
   - wallet
   - wallet/wsapi
@@ -42,7 +42,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: 035968eaf15a6cb86748de876a9ce695c2e41228
+  version: e8403d3e9cee2fb5aabb96899260a4497cfea4fe
   subpackages:
   - activations
   - anchor
