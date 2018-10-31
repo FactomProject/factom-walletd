@@ -16,6 +16,7 @@ import (
 	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factom/wallet/wsapi"
+	"github.com/FactomProject/factomd/database/securedb"
 	"github.com/FactomProject/factomd/util"
 )
 
@@ -48,6 +49,8 @@ func main() {
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
+		encryptedDB     = flag.Bool("walletencrypted", false, "Option to enable encryption for database when not in use.")
+		password        = flag.String("passphrase", "", "Password used to encrypt/decrypt the wallet")
 	)
 	flag.Parse()
 
@@ -56,6 +59,9 @@ func main() {
 	if *lflag {
 		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
 	}
+
+	encryptedPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
+
 	if *wflag != "" {
 		walletPath = *wflag
 	}
@@ -63,6 +69,48 @@ func main() {
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
 	cfg := util.ReadConfig(filename)
+
+	if !*encryptedDB {
+		if cfg.Walletd.WalletEncrypted {
+			*encryptedDB = true
+		}
+	}
+
+	// Conditions around using the encrypted wallet
+	if *encryptedDB {
+		if *password == "" {
+			fmt.Println("WalletEncryption option is enabled. When using an encrypted database, you must also specifiy a '-passphrase'")
+			os.Exit(1)
+		}
+
+		// Check if regular wallet exists
+		_, err := os.Stat(walletPath)
+		if !os.IsNotExist(err) {
+			// Regular wallet exists, exit
+			fmt.Printf("Encrypted Wallet option was selected, however an unencrypted wallet already exists."+
+				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption. "+
+				"(Back it up before deleting!)\n", walletPath)
+			os.Exit(1)
+		}
+
+		// Change the path to encrypted path
+		walletPath = encryptedPath
+	} else {
+		_, err := os.Stat(encryptedPath)
+		if !os.IsNotExist(err) {
+			// Regular wallet exists, exit
+			fmt.Printf("The wallet is being launched without database encryption,"+
+				" however an encrypted wallet already exists."+
+				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption."+
+				" (Back it up before deleting!)\n", encryptedPath)
+
+			os.Exit(1)
+		}
+
+		fmt.Printf("Warning, factom-walletd database is not encrypted. Private keys are stored plainly.\n")
+
+		// Check if encrypted wallet exists
+	}
 
 	if *walletRpcUser == "" {
 		if cfg.Walletd.WalletRpcUser != "" {
@@ -169,6 +217,9 @@ func main() {
 	if *mflag != "" {
 		log.Printf("Creating new wallet with mnemonic")
 		w, err := func() (*wallet.Wallet, error) {
+			if *encryptedDB {
+				return wallet.ImportEncryptedWalletFromMnemonic(*mflag, walletPath, *password)
+			}
 			if *lflag {
 				return wallet.ImportLDBWalletFromMnemonic(*mflag, walletPath)
 			}
@@ -185,6 +236,9 @@ func main() {
 	if *iflag != "" {
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, walletPath)
 		w, err := func() (*wallet.Wallet, error) {
+			if *encryptedDB {
+				return wallet.ImportV1WalletToEncryptedDB(*iflag, walletPath, *password)
+			}
 			if *lflag {
 				return wallet.ImportV1WalletToLDB(*iflag, walletPath)
 			}
@@ -219,6 +273,9 @@ func main() {
 
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
+		if *encryptedDB {
+			return wallet.NewEncryptedBoltDBWallet(walletPath, *password)
+		}
 		if *lflag {
 			return wallet.NewOrOpenLevelDBWallet(walletPath)
 		}
@@ -245,6 +302,11 @@ func main() {
 			wsapi.Stop()
 		}
 	}()
+
+	// If it is encrypted, we need to start the wallet as locked
+	if *encryptedDB {
+		fctWallet.DBO.DB.(*securedb.EncryptedDB).Lock()
+	}
 
 	// start the wsapi server
 	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), RPCConfig)
