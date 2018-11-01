@@ -54,18 +54,6 @@ func main() {
 	)
 	flag.Parse()
 
-	// set the wallet path to the wflag or to the default
-	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet.db"
-	if *lflag {
-		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
-	}
-
-	encryptedPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
-
-	if *wflag != "" {
-		walletPath = *wflag
-	}
-
 	//see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename() //file name and path to factomd.conf file
 	cfg := util.ReadConfig(filename)
@@ -76,29 +64,54 @@ func main() {
 		}
 	}
 
+	// set the wallet path to the wflag or to the default
+	walletPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet.db"
+	if *lflag {
+		walletPath = util.GetHomeDir() + "/.factom/wallet/factom_wallet.ldb"
+		if *encryptedDB {
+			fmt.Println("WalletEncryption option is enabled, but is incompatible with levelDB")
+			os.Exit(1)
+		}
+	}
+
+	encryptedPath := util.GetHomeDir() + "/.factom/wallet/factom_wallet_encrypted.db"
+
+	if *wflag != "" {
+		walletPath = *wflag
+	}
+
 	// Conditions around using the encrypted wallet
 	if *encryptedDB {
-		if *password == "" {
-			fmt.Println("WalletEncryption option is enabled. When using an encrypted database, you must also specifiy a '-passphrase'")
-			os.Exit(1)
+		// Check if regular wallet exists, exit if the wrong wallet exists, assuming an unsafe configuration issue.
+		//ignore the check if a custom path were specified.  Assume more competence in that case
+		if *wflag == "" {
+			_, err := os.Stat(walletPath)
+			if !os.IsNotExist(err) {
+				// Regular wallet exists, exit
+				fmt.Printf("Encrypted Wallet option was selected, however an unencrypted wallet already exists."+
+					"\nRemove the wallet file at '%s' to launch factom-walletd with encryption. "+
+					"(Back it up before deleting!)\n", walletPath)
+				os.Exit(1)
+			}
 		}
 
-		// Check if regular wallet exists
+		// Change the path to encrypted path, or use the specified path
+		if *wflag != "" {
+			walletPath = *wflag
+		} else {
+			walletPath = encryptedPath
+		}
+		
+		//if the wallet doesn't already exist, make sure that a password was specified when making a new wallet.
 		_, err := os.Stat(walletPath)
-		if !os.IsNotExist(err) {
-			// Regular wallet exists, exit
-			fmt.Printf("Encrypted Wallet option was selected, however an unencrypted wallet already exists."+
-				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption. "+
-				"(Back it up before deleting!)\n", walletPath)
+		if os.IsNotExist(err) && *password == "" {
+			fmt.Println("WalletEncryption option is enabled. When creating an encrypted database, you must also specifiy a '-passphrase'")
 			os.Exit(1)
 		}
-
-		// Change the path to encrypted path
-		walletPath = encryptedPath
 	} else {
 		_, err := os.Stat(encryptedPath)
 		if !os.IsNotExist(err) {
-			// Regular wallet exists, exit
+			// Regular wallet exists, exit if the wrong wallet exists, assuming an unsafe configuration issue.
 			fmt.Printf("The wallet is being launched without database encryption,"+
 				" however an encrypted wallet already exists."+
 				"\nRemove the wallet file at '%s' to launch factom-walletd with encryption."+
