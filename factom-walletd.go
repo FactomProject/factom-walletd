@@ -7,17 +7,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
-	"os"
-	"os/signal"
-	"strings"
-	"syscall"
-
 	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
 	"github.com/FactomProject/factom/wallet/wsapi"
 	"github.com/FactomProject/factomd/database/securedb"
 	"github.com/FactomProject/factomd/util"
+	"log"
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
 )
 
 func main() {
@@ -284,9 +283,20 @@ func main() {
 		os.Exit(0)
 	}
 
+	// setup handling for os signals and stop the server gracefully
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		for sig := range c {
+			log.Printf("Captured %v, stopping web server and exiting", sig)
+			wsapi.Stop()
+		}
+	}()
+
 	// open or create a new wallet file
 	fctWallet, err := func() (*wallet.Wallet, error) {
 		if *encryptedDB {
+			// start server and wait for password
 			return wallet.NewEncryptedBoltDBWallet(walletPath, *password)
 		}
 		if *lflag {
@@ -305,16 +315,6 @@ func main() {
 	} else {
 		fctWallet.AddTXDB(txdb)
 	}
-
-	// setup handling for os signals and stop the server gracefully
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
-		for sig := range c {
-			log.Printf("Captured %v, stopping web server and exiting", sig)
-			wsapi.Stop()
-		}
-	}()
 
 	// If it is encrypted, we need to start the wallet as locked
 	if *encryptedDB {
