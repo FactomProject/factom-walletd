@@ -113,6 +113,13 @@ func main() {
 			}
 			// At this point, encrypted wallet database does not yet exist, and we provided a password to bootstrap it.
 			isEncryptedFirstBoot = true
+		} else if *passphrase != "" {
+			fmt.Printf("An encrypted database already exists at %s. But a '-passphrase' was also provided.\n" +
+				"To start the existing encrypted wallet, do not supply the '-passphrase' argument. You will then be able " +
+				"to unlock the wallet at any point in the future using the 'unlock-wallet' RPC method.\n" +
+				"If you would like to start a new encrypted wallet, rename the above file or specify a new path with " +
+				"the '-w' flag.\n", walletPath)
+			os.Exit(1)
 		}
 	} else {
 		_, err := os.Stat(walletPath)
@@ -247,6 +254,7 @@ func main() {
 			log.Fatal(err)
 		}
 
+		log.Printf("Re-run factom-walletd without the -m flag to start the wallet from the newly imported seed")
 		w.Close()
 		os.Exit(0)
 	}
@@ -265,6 +273,8 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		log.Printf("Re-run factom-walletd without the -i flag to start the wallet from the newly created wallet")
 		w.Close()
 		os.Exit(0)
 	}
