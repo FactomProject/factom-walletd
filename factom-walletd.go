@@ -6,12 +6,12 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-	"fmt"
 
 	"github.com/FactomProject/factom"
 	"github.com/FactomProject/factom/wallet"
@@ -60,6 +60,7 @@ func main() {
 
 	if !*encryptedDB {
 		if cfg.Walletd.WalletEncrypted {
+			fmt.Printf("WalletEncryption enabled in config file at: %s\n", filename)
 			*encryptedDB = true
 		}
 	}
@@ -102,8 +103,8 @@ func main() {
 		} else {
 			walletPath = encryptedPath
 		}
-		
-		//if the wallet doesn't already exist, make sure that a passphrase was specified when making a new wallet.
+
+		// If the wallet doesn't already exist, make sure that a passphrase was specified when making a new wallet.
 		_, err := os.Stat(walletPath)
 		if os.IsNotExist(err) {
 			if *passphrase == "" {
@@ -114,17 +115,17 @@ func main() {
 			// At this point, encrypted wallet database does not yet exist, and we provided a password to bootstrap it.
 			isEncryptedFirstBoot = true
 		} else if *passphrase != "" {
-			fmt.Printf("An encrypted database already exists at %s. But a '-passphrase' was also provided.\n" +
-				"To start the existing encrypted wallet, do not supply the '-passphrase' argument. You will then be able " +
-				"to unlock the wallet at any point in the future using the 'unlock-wallet' RPC method.\n" +
-				"If you would like to start a new encrypted wallet, rename the above file or specify a new path with " +
+			fmt.Printf("An encrypted database already exists at %s. But a '-passphrase' was also provided.\n"+
+				"To start the existing encrypted wallet, do not supply the '-passphrase' argument. You will then be able "+
+				"to unlock the wallet at any point in the future using the 'unlock-wallet' RPC method.\n"+
+				"If you would like to start a new encrypted wallet, rename the above file or specify a new path with "+
 				"the '-w' flag.\n", walletPath)
 			os.Exit(1)
 		}
 	} else {
-		_, err := os.Stat(walletPath)
+		_, err := os.Stat(encryptedPath)
 		if !os.IsNotExist(err) {
-			// Regular wallet exists, exit if the wrong wallet exists, assuming an unsafe configuration issue.
+			// Encrypted wallet exists, but trying to start unencrypted. Exit assuming an unsafe configuration issue.
 			fmt.Printf("The wallet is being launched without database encryption, however an encrypted wallet already exists.\n"+
 				"Remove or rename the wallet file at '%s' to launch factom-walletd without encryption. "+
 				"(Back it up before deleting!)\n", encryptedPath)
@@ -254,12 +255,17 @@ func main() {
 			log.Fatal(err)
 		}
 
-		log.Printf("Re-run factom-walletd without the -m flag to start the wallet from the newly imported seed")
+		fmt.Printf("SUCCESS: re-run factom-walletd without the -m flag to start the wallet from the newly imported seed")
 		w.Close()
 		os.Exit(0)
 	}
 
 	if *iflag != "" {
+		if *encryptedDB {
+			fmt.Printf("EXIT: v1 wallet imports are not officially supported for encrypted wallets")
+			os.Exit(1)
+		}
+
 		log.Printf("Importing version 1 wallet %s into %s", *iflag, walletPath)
 		w, err := func() (*wallet.Wallet, error) {
 			if *encryptedDB {
@@ -273,13 +279,20 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		log.Printf("Re-run factom-walletd without the -i flag to start the wallet from the newly created wallet")
+		fmt.Printf("SUCCESS: re-run factom-walletd without the -i flag to start the wallet from the newly created wallet")
 		w.Close()
 		os.Exit(0)
 	}
 
 	if *eflag {
+		if *encryptedDB {
+			fmt.Printf("EXIT: Wallet exports from the cli are not allowed for encrypted wallets.\n" +
+				"However, you can perform a back up by performing the following:\n" +
+				"1. boot the encrypted wallet normally\n" +
+				"2. unlock it via the 'unlock-wallet' RPC call\n" +
+				"3. issue a 'wallet-backup' RPC call before the unlock timeout period\n")
+			os.Exit(1)
+		}
 		m, fs, es, err := func() (string, []*factom.FactoidAddress, []*factom.ECAddress, error) {
 			if *lflag {
 				return wallet.ExportLDBWallet(walletPath)
