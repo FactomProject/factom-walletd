@@ -46,6 +46,7 @@ func main() {
 		walletRpcPassword  = flag.String("walletpassword", "", "Password to expect before allowing connections")
 		factomdRpcUser     = flag.String("factomduser", "", "Username for API connections to factomd")
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
+		corsDomains        = flag.String("corsdomains", "", "CORS Domains")
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
@@ -227,6 +228,12 @@ func main() {
 		}
 	}
 
+	if *corsDomains == "" {
+		if cfg.App.CorsDomains != "" {
+			*corsDomains = cfg.App.CorsDomains
+		}
+	}
+
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
 		WalletTLSEnable:   *walletTLSflag,
@@ -235,6 +242,7 @@ func main() {
 		WalletRPCUser:     *walletRpcUser,
 		WalletRPCPassword: *walletRpcPassword,
 		WalletServer:      *walletdLocation,
+		WalletCORSDomains: *corsDomains,
 	}
 	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
 	factom.SetFactomdServer(*factomdLocation)
