@@ -33,7 +33,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: fa4820610635bffe35f29fbf6d199bbc6b002534
+  version: b73c7ec4619ff26df17e9cb8d26fbd3bbb8d01ea
   subpackages:
   - wallet
   - wallet/wsapi
@@ -98,7 +98,7 @@ imports:
 - name: github.com/FactomProject/snappy-go
   version: f2f83b22c29e5abc60e3a95062ce1491d3b95371
 - name: github.com/FactomProject/web
-  version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
+  version: 951cacf54656419dbaf444bc69b82799660ff521
 - name: github.com/golang/protobuf
   version: 1918e1ff6ffd2be7bed0553df8650672c3bfe80d
   subpackages:
