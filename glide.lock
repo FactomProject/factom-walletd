@@ -1,5 +1,5 @@
-hash: 8453ae1ffcbdeae34843378908e36e1d694da43464c6b3f17a09f7d48dc5b622
-updated: 2018-10-30T16:58:12.740615983-05:00
+hash: cc0af0c3fc9a14f2432a4092caf63e7cebae554109a550c89b2265c0de77174f
+updated: 2019-01-14T17:46:19.51420548-06:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
@@ -66,6 +66,7 @@ imports:
   - database/securedb
   - log
   - util
+  - util/atomic
 - name: github.com/FactomProject/go-bip32
   version: 3b593af1c415abc1017648e4eb24a88c32fee0f3
 - name: github.com/FactomProject/go-bip39
@@ -130,6 +131,8 @@ imports:
   - internal/util
   - nfs
   - xfs
+- name: github.com/rs/cors
+  version: a3460e445dd310dbefee993fe449f2ff9c08ae71
 - name: github.com/sirupsen/logrus
   version: 566a5f690849162ff53cf98f3c42135389d63f95
 - name: golang.org/x/crypto
