@@ -1,5 +1,5 @@
 hash: b36064c3da1bc9dce5f2e117df81aff1ab8d5977e56186b3ec8d7f33b1936954
-updated: 2019-03-01T11:12:45.748428668-06:00
+updated: 2019-03-01T14:12:29.600967885-06:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 92b9a9bb5aa25574d8b950bf4e9daec78c8980b2
+  version: 19812f14250bc801573d0103d334264256bbf066
   subpackages:
   - wallet
   - wallet/wsapi
@@ -122,38 +122,39 @@ imports:
 - name: github.com/FactomProject/web
   version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
 - name: github.com/golang/protobuf
-  version: ddf22928ea3c56eb4292a0adbbf5001b1e8e7d0d
+  version: b5d812f8a3706043e23a9cd5babf2e5423744d30
   subpackages:
   - proto
 - name: github.com/konsorten/go-windows-terminal-sequences
-  version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
+  version: f55edac94c9bbba5d6182a4be46d86a2c9b5b50e
 - name: github.com/matttproud/golang_protobuf_extensions
-  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  version: c182affec369e30f25d3eb8cd8a478dee585ae7d
   subpackages:
   - pbutil
 - name: github.com/prometheus/client_golang
-  version: 1cafe34db7fdec6022e17e00e1c1ea501022f3e4
+  version: 2daed26f633ce23fab5efc02fb3f2e803b3526c3
   subpackages:
   - prometheus
   - prometheus/internal
 - name: github.com/prometheus/client_model
-  version: 5c3871d89910bfb32f5fcab2aa4b9ec68e65a99f
+  version: fd36f4220a901265f90734c3183c5f0c91daa0b8
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: bcb74de08d37a417cb6789eec1d6c810040f0470
+  version: 7a3416fd1f41341905f138746c51a5092e7ddf7a
   subpackages:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: 185b4288413d2a0dd0806f78c90dde719829e5ae
+  version: bbced9601137e764853b2fad7ec3e2dc4c504e02
   subpackages:
   - internal/util
+  - iostats
   - nfs
   - xfs
 - name: github.com/sirupsen/logrus
-  version: 680f584d621da87ee04ea659130e149ba9d23cae
+  version: fa3c1df5136d05b1b54b72794cf89579f2b39f7b
 - name: golang.org/x/crypto
   version: 8dd112bcdc25174059e45e07517d9fc663123347
   subpackages:
