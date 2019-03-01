@@ -1,5 +1,5 @@
-hash: e18b36e33e4f9abcff9a8e6fac5f586980d844f79283455d89e7efb703e6e25c
-updated: 2019-02-27T12:57:52.727929102-06:00
+hash: b36064c3da1bc9dce5f2e117df81aff1ab8d5977e56186b3ec8d7f33b1936954
+updated: 2019-03-01T11:12:45.748428668-06:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: db9756aef1c3d6847a47b78ac0022bfcfac125b7
+  version: 92b9a9bb5aa25574d8b950bf4e9daec78c8980b2
   subpackages:
   - wallet
   - wallet/wsapi
