@@ -74,4 +74,3 @@ import:
   version: master
 - package: gopkg.in/warnings.v0
   version: master
-

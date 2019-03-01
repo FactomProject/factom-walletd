@@ -233,6 +233,7 @@ func main() {
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
+		txdb.Update()
 		fctWallet.AddTXDB(txdb)
 	}
 
