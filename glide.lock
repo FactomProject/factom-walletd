@@ -1,5 +1,5 @@
-hash: b36064c3da1bc9dce5f2e117df81aff1ab8d5977e56186b3ec8d7f33b1936954
-updated: 2019-03-01T14:12:29.600967885-06:00
+hash: cc0af0c3fc9a14f2432a4092caf63e7cebae554109a550c89b2265c0de77174f
+updated: 2019-01-14T17:46:19.51420548-06:00
 imports:
 - name: github.com/beorn7/perks
   version: 3a771d992973f24aa725d07868b467d1ddfceafb
@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 19812f14250bc801573d0103d334264256bbf066
+  version: 53ea52e1e6ec58b22205b5e54b82b72037305ff3
   subpackages:
   - wallet
   - wallet/wsapi
@@ -63,7 +63,7 @@ imports:
   subpackages:
   - controlpanel
 - name: github.com/FactomProject/factomd
-  version: b5f102e5333bf63c579b2d085f0055ae0b4cd09e
+  version: 5f787fc9bf067dac6df2c36803e03e2a1a3b3186
   subpackages:
   - activations
   - anchor
@@ -93,7 +93,7 @@ imports:
 - name: github.com/FactomProject/go-bip39
   version: d1007fb78d9a7ec65314dad412973e63caf4c527
 - name: github.com/FactomProject/go-bip44
-  version: fd672f46ddc35bb381f497f7b64c9cf34f9e0703
+  version: b541a96d8da98567af7610ef96105a834e6ed46c
 - name: github.com/FactomProject/go-simplejson
   version: aabad6e819789e569bd6aabf444c935aa9ba1e44
 - name: github.com/FactomProject/go-spew
@@ -120,54 +120,55 @@ imports:
 - name: github.com/FactomProject/snappy-go
   version: f2f83b22c29e5abc60e3a95062ce1491d3b95371
 - name: github.com/FactomProject/web
-  version: 7daee1bf727fc2cd9142b9a73a797f98b3180756
+  version: 951cacf54656419dbaf444bc69b82799660ff521
 - name: github.com/golang/protobuf
-  version: b5d812f8a3706043e23a9cd5babf2e5423744d30
+  version: 1918e1ff6ffd2be7bed0553df8650672c3bfe80d
   subpackages:
   - proto
 - name: github.com/konsorten/go-windows-terminal-sequences
-  version: f55edac94c9bbba5d6182a4be46d86a2c9b5b50e
+  version: 5c8c8bd35d3832f5d134ae1e1e375b69a4d25242
 - name: github.com/matttproud/golang_protobuf_extensions
-  version: c182affec369e30f25d3eb8cd8a478dee585ae7d
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
   subpackages:
   - pbutil
 - name: github.com/prometheus/client_golang
-  version: 2daed26f633ce23fab5efc02fb3f2e803b3526c3
+  version: f30f428035633da15d00d3dfefb0128c5e569ef4
   subpackages:
   - prometheus
   - prometheus/internal
 - name: github.com/prometheus/client_model
-  version: fd36f4220a901265f90734c3183c5f0c91daa0b8
+  version: 5c3871d89910bfb32f5fcab2aa4b9ec68e65a99f
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: 7a3416fd1f41341905f138746c51a5092e7ddf7a
+  version: 7e9e6cabbd393fc208072eedef99188d0ce788b6
   subpackages:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: bbced9601137e764853b2fad7ec3e2dc4c504e02
+  version: 185b4288413d2a0dd0806f78c90dde719829e5ae
   subpackages:
   - internal/util
-  - iostats
   - nfs
   - xfs
+- name: github.com/rs/cors
+  version: a3460e445dd310dbefee993fe449f2ff9c08ae71
 - name: github.com/sirupsen/logrus
-  version: fa3c1df5136d05b1b54b72794cf89579f2b39f7b
+  version: 566a5f690849162ff53cf98f3c42135389d63f95
 - name: golang.org/x/crypto
-  version: 8dd112bcdc25174059e45e07517d9fc663123347
+  version: 4d3f4d9ffa16a13f451c3b2999e9c49e9750bf06
   subpackages:
   - pbkdf2
   - ripemd160
   - scrypt
   - ssh/terminal
 - name: golang.org/x/net
-  version: 92fc7df08ae7536330f5a21328292abfa70520a8
+  version: c44066c5c816ec500d459a2a324a753f78531ae0
   subpackages:
   - websocket
 - name: golang.org/x/sys
-  version: a34e9553db1e492c9a76e60db2296ae7e5fbb772
+  version: 7e31e0c00fa05cb5fbf4347b585621d6709e19a4
   subpackages:
   - unix
   - windows
