@@ -1,31 +1,10 @@
 package: github.com/FactomProject/factom-walletd
-homepage: https://github.com/FactomProject/factom-walletd
-license: MIT
-owners:
-- name: Factom
-  email: hello@factom.com
-  homepage: https://factom.com
 import:
-- package: github.com/FactomProject/basen
-  version: master
-- package: github.com/FactomProject/bolt
-  version: master
-- package: github.com/FactomProject/btcutil
-  version: develop
-  subpackages:
-  - base58
-  - certs
-- package: github.com/FactomProject/btcutilecc
-  version: master
-- package: github.com/FactomProject/ed25519
-  version: master
 - package: github.com/FactomProject/factom
-  version: develop
   subpackages:
   - wallet
   - wallet/wsapi
 - package: github.com/FactomProject/factomd
-  version: develop
   subpackages:
   - util
 - package: github.com/FactomProject/go-bip32
