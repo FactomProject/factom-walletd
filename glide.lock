@@ -54,7 +54,7 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 53ea52e1e6ec58b22205b5e54b82b72037305ff3
+  version: 1dd545b15f93f9702e533aaa0ea36c713648b43c
   subpackages:
   - wallet
   - wallet/wsapi
@@ -121,6 +121,8 @@ imports:
   version: f2f83b22c29e5abc60e3a95062ce1491d3b95371
 - name: github.com/FactomProject/web
   version: 951cacf54656419dbaf444bc69b82799660ff521
+- name: github.com/rs/cors
+  version: a3460e445dd310dbefee993fe449f2ff9c08ae71
 - name: github.com/golang/protobuf
   version: 1918e1ff6ffd2be7bed0553df8650672c3bfe80d
   subpackages:
