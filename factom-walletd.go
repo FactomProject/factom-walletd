@@ -54,6 +54,14 @@ func main() {
 	flag.Parse()
 
 
+	// see if the config file has values which should be used instead of null strings
+	filename := util.ConfigFilename()
+	if *configPath != "" {
+		filename = *configPath
+	}
+	cfg := util.ReadConfig(filename)
+
+
 	if !*encryptedDB {
 		if cfg.Walletd.WalletEncrypted {
 			fmt.Printf("WalletEncryption enabled in config file at: %s\n", filename)
@@ -78,13 +86,6 @@ func main() {
 		walletPath = *wflag
 	}
 
-
-	// see if the config file has values which should be used instead of null strings
-	filename := util.ConfigFilename()
-	if *configPath != "" {
-		filename = *configPath
-	}
-	cfg := util.ReadConfig(filename)
 
 	// Conditions around using the encrypted wallet
 	if *encryptedDB {
