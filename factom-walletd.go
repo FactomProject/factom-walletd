@@ -50,6 +50,7 @@ func main() {
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
 		encryptedDB     = flag.Bool("encrypted", false, "Option to enable encryption for database when not in use.")
 		passphrase      = flag.String("passphrase", "", "Passphrase used to encrypt/decrypt the wallet")
+		remote          = flag.Bool("remote", false, "Allow remote connections to walletd")
 	)
 	flag.Parse()
 
@@ -368,5 +369,12 @@ func main() {
 	}
 
 	// start the wsapi server
-	wsapi.Start(fctWallet, fmt.Sprintf(":%d", port), RPCConfig)
+	bindTo := "127.0.0.1"
+	if *remote {
+		fmt.Printf("Remote connections to this wallet are enabled")
+		bindTo = "0.0.0.0"
+	} else {
+		fmt.Printf("Remote connections to this wallet are disabled")
+	}
+	wsapi.Start(fctWallet, fmt.Sprintf("%s:%d", bindTo, port), RPCConfig)
 }
