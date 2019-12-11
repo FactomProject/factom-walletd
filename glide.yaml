@@ -7,3 +7,49 @@ import:
 - package: github.com/FactomProject/factomd
   subpackages:
   - util
+- package: github.com/FactomProject/go-bip32
+  version: develop
+- package: github.com/FactomProject/go-bip39
+  version: develop
+- package: github.com/FactomProject/go-simplejson
+  version: master
+- package: github.com/FactomProject/go-spew
+  version: master
+  subpackages:
+  - spew
+- package: github.com/FactomProject/goleveldb
+  version: master
+  subpackages:
+  - leveldb
+  - leveldb/opt
+  - leveldb/util
+- package: github.com/FactomProject/netki-go-partner-client
+  version: master
+- package: github.com/FactomProject/snappy-go
+  version: master
+- package: github.com/FactomProject/web
+  version: develop
+- package: github.com/btcsuitereleases/btcd
+  subpackages:
+  - btcjson
+  - chaincfg
+  - txscript
+  - wire
+- package: github.com/btcsuitereleases/btclog
+- package: github.com/btcsuitereleases/btcrpcclient
+- package: github.com/btcsuitereleases/fastsha256
+- package: github.com/btcsuitereleases/golangcrypto
+- package: github.com/btcsuitereleases/go-socks
+- package: github.com/btcsuitereleases/websocket
+- package: github.com/btcsuitereleases/seelog
+- package: github.com/btcsuitereleases/btcrpcclient
+- package: golang.org/x/crypto
+  version: master
+- package: golang.org/x/net
+  version: master
+- package: golang.org/x/sys
+  version: master
+- package: gopkg.in/gcfg.v1
+  version: master
+- package: gopkg.in/warnings.v0
+  version: master

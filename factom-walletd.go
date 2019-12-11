@@ -24,15 +24,13 @@ func main() {
 	// configure the server
 	var (
 		pflag = flag.Int("p", 8089, "set the port to host the wsapi")
-		wflag = flag.String(
-			"w",
-			"",
-			"set the default wallet location",
-		)
+		wflag = flag.String("w", "", "set the default wallet location")
 		iflag = flag.String("i", "", "Import a version 1 wallet. Set as path to factoid_wallet_bolt.db")
 		mflag = flag.String("m", "", "import a wallet from 12 word mnemonic")
 		eflag = flag.Bool("e", false, "export a wallet for backup")
 		lflag = flag.Bool("l", false, "Create or use an LDB database")
+
+		configPath = flag.String("config", "", "Override the config file location (factomd.conf)")
 
 		// Use TLS for the wallet "factom-walletd -wallettls=true"
 		walletTLSflag = flag.Bool("wallettls", false, "Set to true to require encrypted connections to the wallet")
@@ -55,9 +53,14 @@ func main() {
 	)
 	flag.Parse()
 
-	//see if the config file has values which should be used instead of null strings
-	filename := util.ConfigFilename() //file name and path to factomd.conf file
+
+	// see if the config file has values which should be used instead of null strings
+	filename := util.ConfigFilename()
+	if *configPath != "" {
+		filename = *configPath
+	}
 	cfg := util.ReadConfig(filename)
+
 
 	if !*encryptedDB {
 		if cfg.Walletd.WalletEncrypted {
@@ -82,6 +85,7 @@ func main() {
 	if *wflag != "" {
 		walletPath = *wflag
 	}
+
 
 	// Conditions around using the encrypted wallet
 	if *encryptedDB {
@@ -356,6 +360,7 @@ func main() {
 	if err != nil {
 		log.Println("Could not add transaction database to wallet:", err)
 	} else {
+		txdb.Update()
 		fctWallet.AddTXDB(txdb)
 	}
 

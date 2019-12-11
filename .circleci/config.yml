@@ -23,7 +23,7 @@ jobs:
             go install
 
       - run:
-          name: Get goveralls
+          name: Get goveralls + Glide
           command: |
             go get github.com/mattn/goveralls
             cd $GOPATH/src/github.com/Masterminds/glide
@@ -112,7 +112,7 @@ jobs:
             go install
 
       - run:
-          name: Get goveralls
+          name: Get goveralls + Glide
           command: |
             go get github.com/mattn/goveralls
             cd $GOPATH/src/github.com/Masterminds/glide
@@ -128,9 +128,11 @@ jobs:
           name: Build and install the executable
           command: go install -v
 
-      - run:
-          name: Coveralls!
-          command: goveralls -v -flags "-vet=off" -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
+# Disable coveralls. This repo is just a wrapper for factom/wallet
+#   That is where the unit tests are
+#      - run:
+#          name: Coveralls!
+#          command: goveralls -v -flags "-vet=off" -ignore=$(paste -sd, .coverignore) -service=circle-ci -repotoken=$COVERALLS_TOKEN
 
 
       - save_cache:
