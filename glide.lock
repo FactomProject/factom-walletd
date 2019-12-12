@@ -54,10 +54,14 @@ imports:
   - state/stateinit
   - wallet
 - name: github.com/FactomProject/factom
-  version: 1dd545b15f93f9702e533aaa0ea36c713648b43c
+  version: 62a7f694f4d9ba593453c899e0af730e26bfaca6
   subpackages:
   - wallet
   - wallet/wsapi
+- name: github.com/ethereum/go-ethereum
+  version: 738b51ae31c48a598b7c5bad37c054976a41025f
+  subpackages:
+  - crypto
 - name: github.com/FactomProject/FactomCode
   version: d7e03150a9d5d8672e52a0769a4c6376f5c12631
   subpackages:
