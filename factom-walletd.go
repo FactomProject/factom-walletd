@@ -14,10 +14,10 @@ import (
 	"syscall"
 
 	"github.com/FactomProject/factom"
-	"github.com/FactomProject/factom/wallet"
-	"github.com/FactomProject/factom/wallet/wsapi"
 	"github.com/FactomProject/factomd/database/securedb"
 	"github.com/FactomProject/factomd/util"
+	"github.com/FactomProject/wallet/v2"
+	"github.com/FactomProject/wallet/v2/wsapi"
 )
 
 func main() {
@@ -53,14 +53,12 @@ func main() {
 	)
 	flag.Parse()
 
-
 	// see if the config file has values which should be used instead of null strings
 	filename := util.ConfigFilename()
 	if *configPath != "" {
 		filename = *configPath
 	}
 	cfg := util.ReadConfig(filename)
-
 
 	if !*encryptedDB {
 		if cfg.Walletd.WalletEncrypted {
@@ -85,7 +83,6 @@ func main() {
 	if *wflag != "" {
 		walletPath = *wflag
 	}
-
 
 	// Conditions around using the encrypted wallet
 	if *encryptedDB {
