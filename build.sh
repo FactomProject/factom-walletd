@@ -1,9 +1,4 @@
-vendorver=./vendor/github.com/FactomProject/factom/wallet/VERSION
-godirver=$GOPATH/src/github.com/FactomProject/factom/wallet/VERSION
-
-if [ -f $vendorver ]; then
-    go install -ldflags "-X github.com/FactomProject/factom-walletd/vendor/github.com/FactomProject/factom/wallet.WalletVersion=`cat $vendorver`" -v
-else
-    go install -ldflags "-X github.com/FactomProject/factom/wallet.WalletVersion=`cat $godirver`" -v
-fi
+# Version of walletd should be the same as the wallet library
+VERSION=$(cat go.mod | grep "github.com/FactomProject/wallet" | cut -d' ' -f2)
+go install -ldflags "-X github.com/FactomProject/wallet/v2.WalletVersion=$VERSION" -v
 
