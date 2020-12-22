@@ -61,6 +61,8 @@ github.com/FactomProject/wallet/v2 v2.4.0 h1:wPrO5O7Tj6Xkq+gahYbHto3i2xh5phqdB6I
 github.com/FactomProject/wallet/v2 v2.4.0/go.mod h1:rFB8n4wotEneXLtEUCV6KKD7mwFBY8uw1oISLy2a8UM=
 github.com/FactomProject/wallet/v2 v2.4.1 h1:umWYhUnyp2cuPxAaSrfLJpKKhiK3AkFPzlq7Ytjtw0g=
 github.com/FactomProject/wallet/v2 v2.4.1/go.mod h1:rFB8n4wotEneXLtEUCV6KKD7mwFBY8uw1oISLy2a8UM=
+github.com/FactomProject/wallet/v2 v2.4.2 h1:bPCNpazpqlik7niZXJLD40cPZtbgOcrPq9wttmsjU28=
+github.com/FactomProject/wallet/v2 v2.4.2/go.mod h1:rFB8n4wotEneXLtEUCV6KKD7mwFBY8uw1oISLy2a8UM=
 github.com/FactomProject/web v0.1.1-0.20200312214504-cff1e06a4e47 h1:wmZKHdMrPO0YFPab0pJWkUJ2XVzAgYEvCE7d+4WoJJ8=
 github.com/FactomProject/web v0.1.1-0.20200312214504-cff1e06a4e47/go.mod h1:p7dwXIht8oBpkon6PPK3u4/yNAZXomxWshTyHm2UBxw=
 github.com/FactomProject/websocket v0.2.1/go.mod h1:bUIwxTysrP5RW7paQDJMBhQY5g8Uj5I7yeyupo4ktag=
