@@ -30,5 +30,10 @@ or Entries.
 
 Alternatively you can build and install from source.
 ```
-./build.sh
+make install
+```
+
+To cross compile to all supported platforms:
+```
+make all
 ```
