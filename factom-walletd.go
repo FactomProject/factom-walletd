@@ -371,10 +371,10 @@ func main() {
 	// start the wsapi server
 	bindTo := "127.0.0.1"
 	if *remote {
-		fmt.Printf("Remote connections to this wallet are enabled")
+		fmt.Println("Remote connections to this wallet are enabled")
 		bindTo = "0.0.0.0"
 	} else {
-		fmt.Printf("Remote connections to this wallet are disabled")
+		fmt.Println("Remote connections to this wallet are disabled")
 	}
 	wsapi.Start(fctWallet, fmt.Sprintf("%s:%d", bindTo, port), RPCConfig)
 }
