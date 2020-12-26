@@ -1,4 +1,4 @@
-module github.com/FactomProject/factom-walletd/v2
+module github.com/FactomProject/factom-walletd/v3
 
 go 1.15
 

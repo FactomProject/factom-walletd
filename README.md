@@ -22,9 +22,7 @@ or Entries.
 
 ## Package distribution
 
-`factom-walletd` is installed with the Factom package found
-[here](https://github.com/FactomProject/distribution). This also installs
-`factomd` and `factom-cli`.
+Binaries for your platform can be downloaded from the [GitHub release page](https://github.com/FactomProject/factom-walletd/releases).
 
 ## Build and install
 
