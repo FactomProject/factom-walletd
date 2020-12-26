@@ -9,7 +9,7 @@ COPY . .
 ARG GOOS=linux
 
 # Build and install factom-walletd
-RUN ./build.sh
+RUN make install
 
 ENTRYPOINT ["/go/bin/factom-walletd"]
 

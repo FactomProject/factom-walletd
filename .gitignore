@@ -21,6 +21,7 @@ peers.json
 *.gz
 
 # Folders
+build
 _obj
 _test
 bin
