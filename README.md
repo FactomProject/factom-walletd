@@ -11,6 +11,8 @@ uses them to compose transactions for the Factom blockchain. It can compose
 transactions for sending Factoids, purchasing Entry Credits, or creating Chains
 or Entries.
 
+Note that by default factom-walletd only accepts local connections. To allow remote connections add the flag `-remote`.
+
 ## Dependencies
 ### Build Dependencies
 - Go > 1.13
