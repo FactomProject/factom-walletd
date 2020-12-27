@@ -45,6 +45,7 @@ func main() {
 		factomdRpcUser     = flag.String("factomduser", "", "Username for API connections to factomd")
 		factomdRpcPassword = flag.String("factomdpassword", "", "Password for API connections to factomd")
 		corsDomains        = flag.String("corsdomains", "", "CORS Domains")
+		whitelist          = flag.String("whitelist", "", "If not empty, only whitelisted IPs will be able to connect. Comma separated list of IP addresses. Local addresses will always be able to connect.")
 
 		factomdLocation = flag.String("s", "", "IPAddr:port# of factomd API to use to access blockchain (default localhost:8088)")
 		walletdLocation = flag.String("selfaddr", "", "comma seperated IPAddresses and DNS names of this factom-walletd to use when creating a cert file")
@@ -75,6 +76,17 @@ func main() {
 		if *encryptedDB {
 			fmt.Println("WalletEncryption option is enabled, but is incompatible with levelDB")
 			os.Exit(1)
+		}
+	}
+
+	if *whitelist != "" {
+		ips := strings.Split(*whitelist, ",")
+		for _, ip := range ips {
+			ip = strings.TrimSpace(ip)
+			if err := wsapi.WhiteListIP(ip); err != nil {
+				fmt.Printf("Unable to whitelist \"%s\": %v\n", ip, err)
+				os.Exit(1)
+			}
 		}
 	}
 
@@ -238,13 +250,14 @@ func main() {
 
 	port := *pflag
 	RPCConfig := factom.RPCConfig{
-		WalletTLSEnable:   *walletTLSflag,
-		WalletTLSKeyFile:  *walletTLSKey,
-		WalletTLSCertFile: *walletTLSCert,
-		WalletRPCUser:     *walletRpcUser,
-		WalletRPCPassword: *walletRpcPassword,
-		WalletServer:      *walletdLocation,
-		WalletCORSDomains: *corsDomains,
+		WalletTLSEnable:       *walletTLSflag,
+		WalletTLSKeyFile:      *walletTLSKey,
+		WalletTLSCertFile:     *walletTLSCert,
+		WalletRPCUser:         *walletRpcUser,
+		WalletRPCPassword:     *walletRpcPassword,
+		WalletServer:          *walletdLocation,
+		WalletCORSDomains:     *corsDomains,
+		WalletWhiteListEnable: *whitelist != "",
 	}
 	factom.SetFactomdRpcConfig(*factomdRpcUser, *factomdRpcPassword)
 	factom.SetFactomdServer(*factomdLocation)
